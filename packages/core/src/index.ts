@@ -61,6 +61,11 @@ export {
   approveInvoiceProposal,
 } from "./proposals/approve";
 
+// Invoicing
+export { generateInvoiceProposal } from "./invoicing/generate";
+export { detectDeviations } from "./invoicing/deviations";
+export { approveInvoice } from "./invoicing/approve";
+
 // Quote Tokens & Delivery
 export { generateQuoteToken, verifyQuoteToken } from "./quotes/token";
 export { deliverQuote } from "./quotes/deliver";
