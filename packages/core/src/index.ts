@@ -23,3 +23,7 @@ export { getActiveEventsForNode, getActiveEventsForProject } from "./events/reso
 // Economics
 export { calculateProjectEconomics } from "./economics/calculate";
 export type { ProjectEconomics } from "./economics/calculate";
+
+// Messaging
+export { resolveSender, resolveSenderWithProjects } from "./messaging/sender";
+export type { ResolvedSender } from "./messaging/sender";
