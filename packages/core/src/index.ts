@@ -40,3 +40,8 @@ export { resolveSender, resolveSenderWithProjects } from "./messaging/sender";
 export type { ResolvedSender } from "./messaging/sender";
 export { handleIncomingMessage } from "./messaging/handler";
 export type { IncomingMessageInput, HandleResult } from "./messaging/handler";
+export { sendMessage } from "./messaging/send";
+export type { SendMessageInput, SendMessageResult } from "./messaging/send";
+export { generateAndSendWorkOrder } from "./messaging/work-order";
+export type { GenerateWorkOrderInput, WorkOrderResult } from "./messaging/work-order";
+export { onPersonAssignedToProject } from "./messaging/triggers";

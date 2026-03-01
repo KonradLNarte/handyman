@@ -105,6 +105,9 @@ importers:
       '@resonansia/db':
         specifier: workspace:*
         version: link:../db
+      '@resonansia/integrations':
+        specifier: workspace:*
+        version: link:../integrations
       '@resonansia/shared':
         specifier: workspace:*
         version: link:../shared
