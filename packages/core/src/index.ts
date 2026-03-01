@@ -38,3 +38,5 @@ export type { AiTier } from "./ai/config";
 // Messaging
 export { resolveSender, resolveSenderWithProjects } from "./messaging/sender";
 export type { ResolvedSender } from "./messaging/sender";
+export { handleIncomingMessage } from "./messaging/handler";
+export type { IncomingMessageInput, HandleResult } from "./messaging/handler";
