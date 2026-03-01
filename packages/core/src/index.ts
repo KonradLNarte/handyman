@@ -24,6 +24,13 @@ export { getActiveEventsForNode, getActiveEventsForProject } from "./events/reso
 export { calculateProjectEconomics } from "./economics/calculate";
 export type { ProjectEconomics } from "./economics/calculate";
 
+// AI
+export { aiGenerateObject, aiGenerateText } from "./ai/complete";
+export { classifyMessage } from "./ai/classify-message";
+export type { ClassifyMessageInput } from "./ai/classify-message";
+export { AI_TIERS } from "./ai/config";
+export type { AiTier } from "./ai/config";
+
 // Messaging
 export { resolveSender, resolveSenderWithProjects } from "./messaging/sender";
 export type { ResolvedSender } from "./messaging/sender";
