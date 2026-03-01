@@ -61,8 +61,9 @@ export {
   approveInvoiceProposal,
 } from "./proposals/approve";
 
-// Quote Tokens
+// Quote Tokens & Delivery
 export { generateQuoteToken, verifyQuoteToken } from "./quotes/token";
+export { deliverQuote } from "./quotes/deliver";
 
 // Signing
 export {
