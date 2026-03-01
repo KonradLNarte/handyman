@@ -65,6 +65,7 @@ export {
 export { generateInvoiceProposal } from "./invoicing/generate";
 export { detectDeviations } from "./invoicing/deviations";
 export { approveInvoice } from "./invoicing/approve";
+export { submitRotRutClaim } from "./invoicing/skatteverket";
 
 // Quote Tokens & Delivery
 export { generateQuoteToken, verifyQuoteToken } from "./quotes/token";
