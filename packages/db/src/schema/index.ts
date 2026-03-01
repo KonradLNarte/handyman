@@ -7,3 +7,4 @@ export { blobs } from "./blobs";
 export { dicts } from "./dicts";
 export { federationEdges } from "./federation-edges";
 export { notifications } from "./notifications";
+export { proposals } from "./proposals";

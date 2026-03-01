@@ -47,6 +47,19 @@ export type { GlossaryTerm } from "./ai/glossary";
 export { AI_TIERS } from "./ai/config";
 export type { AiTier } from "./ai/config";
 
+// Proposals
+export {
+  createProposal,
+  getProposal,
+  getDraftProposal,
+  updateProposalLine,
+  rejectProposal,
+} from "./proposals/store";
+export {
+  approveQuoteProposal,
+  approveInvoiceProposal,
+} from "./proposals/approve";
+
 // Messaging
 export { resolveSender, resolveSenderWithProjects } from "./messaging/sender";
 export type { ResolvedSender } from "./messaging/sender";

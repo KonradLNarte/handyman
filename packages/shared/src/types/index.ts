@@ -45,3 +45,14 @@ export type {
   EventDataPayment,
   EventDataNote,
 } from "../schemas/event-data";
+
+export type {
+  RotRutType,
+  RotRutResult,
+} from "./rot-rut";
+
+export type {
+  TransientProposal,
+  ProposalLine,
+  Deviation,
+} from "./proposals";
