@@ -11,6 +11,7 @@
   "dependencies": {
     "@resonansia/core": "workspace:^",
     "@resonansia/db": "workspace:^",
+    "@resonansia/integrations": "workspace:^",
     "@resonansia/shared": "workspace:^",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.49.0",

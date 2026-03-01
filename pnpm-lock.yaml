@@ -23,6 +23,9 @@ importers:
       '@resonansia/db':
         specifier: workspace:^
         version: link:../../packages/db
+      '@resonansia/integrations':
+        specifier: workspace:^
+        version: link:../../packages/integrations
       '@resonansia/shared':
         specifier: workspace:^
         version: link:../../packages/shared
