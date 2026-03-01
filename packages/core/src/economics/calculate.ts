@@ -1,6 +1,6 @@
 import type { PgDatabase } from "drizzle-orm/pg-core";
-import { getLabelId } from "../labels.js";
-import { getActiveEventsForProject } from "../events/resolve.js";
+import { getLabelId } from "../labels";
+import { getActiveEventsForProject } from "../events/resolve";
 
 export interface ProjectEconomics {
   quotedTotal: number;

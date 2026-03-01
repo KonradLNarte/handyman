@@ -2,8 +2,8 @@ import { eq, and, sql, ilike } from "drizzle-orm";
 import type { PgDatabase } from "drizzle-orm/pg-core";
 import { nodes } from "@resonansia/db";
 import { generateId, getNodeDataSchema } from "@resonansia/shared";
-import { getLabelId, getLabelCode } from "./labels.js";
-import { buildSearchText } from "./search.js";
+import { getLabelId, getLabelCode } from "./labels";
+import { buildSearchText } from "./search";
 
 export interface CreateNodeInput {
   typeCode: string;

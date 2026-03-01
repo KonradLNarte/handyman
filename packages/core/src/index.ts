@@ -1,25 +1,25 @@
 // Labels
-export { loadLabels, getLabelId, getLabelCode, clearLabelCache } from "./labels.js";
-export type { Label } from "./labels.js";
+export { loadLabels, getLabelId, getLabelCode, clearLabelCache } from "./labels";
+export type { Label } from "./labels";
 
 // Search
-export { buildSearchText } from "./search.js";
+export { buildSearchText } from "./search";
 
 // Nodes
-export { createNode, updateNode, getNode, listNodes, deleteNode } from "./nodes.js";
-export type { CreateNodeInput, UpdateNodeInput, NodeFilters } from "./nodes.js";
+export { createNode, updateNode, getNode, listNodes, deleteNode } from "./nodes";
+export type { CreateNodeInput, UpdateNodeInput, NodeFilters } from "./nodes";
 
 // Edges
-export { createEdge, deleteEdge, listEdges, getRelatedNodes } from "./edges.js";
-export type { CreateEdgeInput } from "./edges.js";
+export { createEdge, deleteEdge, listEdges, getRelatedNodes } from "./edges";
+export type { CreateEdgeInput } from "./edges";
 
 // Events
-export { createEvent } from "./events/create.js";
-export type { CreateEventInput } from "./events/create.js";
-export { correctEvent } from "./events/correct.js";
-export type { CorrectionInput } from "./events/correct.js";
-export { getActiveEventsForNode, getActiveEventsForProject } from "./events/resolve.js";
+export { createEvent } from "./events/create";
+export type { CreateEventInput } from "./events/create";
+export { correctEvent } from "./events/correct";
+export type { CorrectionInput } from "./events/correct";
+export { getActiveEventsForNode, getActiveEventsForProject } from "./events/resolve";
 
 // Economics
-export { calculateProjectEconomics } from "./economics/calculate.js";
-export type { ProjectEconomics } from "./economics/calculate.js";
+export { calculateProjectEconomics } from "./economics/calculate";
+export type { ProjectEconomics } from "./economics/calculate";

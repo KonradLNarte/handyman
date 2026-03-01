@@ -4,14 +4,14 @@ export type {
   MoneyAmount,
   DateRange,
   Locale,
-} from "../schemas/common.js";
+} from "../schemas/common";
 
 export type {
   TenantStatus,
   FederationStatus,
   ProjectionScope,
   EventOrigin,
-} from "../schemas/enums.js";
+} from "../schemas/enums";
 
 export type {
   NodeDataOrg,
@@ -21,7 +21,7 @@ export type {
   NodeDataProduct,
   NodeDataLocation,
   NodeDataSupplier,
-} from "../schemas/node-data.js";
+} from "../schemas/node-data";
 
 export type {
   EdgeDataMemberOf,
@@ -31,7 +31,7 @@ export type {
   EdgeDataLocatedAt,
   EdgeDataSupplierOf,
   EdgeDataUsesProduct,
-} from "../schemas/edge-data.js";
+} from "../schemas/edge-data";
 
 export type {
   EventDataTime,
@@ -44,4 +44,4 @@ export type {
   EventDataStateChange,
   EventDataPayment,
   EventDataNote,
-} from "../schemas/event-data.js";
+} from "../schemas/event-data";

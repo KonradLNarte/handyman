@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { addressSchema, contactInfoSchema, dateRangeSchema } from "./common.js";
+import { addressSchema, contactInfoSchema, dateRangeSchema } from "./common";
 
 export const nodeDataOrgSchema = z.object({
   name: z.string().min(1),

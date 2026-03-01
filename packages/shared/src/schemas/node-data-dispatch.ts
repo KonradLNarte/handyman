@@ -7,7 +7,7 @@ import {
   nodeDataProductSchema,
   nodeDataLocationSchema,
   nodeDataSupplierSchema,
-} from "./node-data.js";
+} from "./node-data";
 
 const schemaMap: Record<string, ZodSchema> = {
   org: nodeDataOrgSchema,

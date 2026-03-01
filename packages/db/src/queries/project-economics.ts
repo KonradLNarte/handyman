@@ -1,5 +1,5 @@
 import type { PgDatabase } from "drizzle-orm/pg-core";
-import { getActiveEvents } from "./active-events.js";
+import { getActiveEvents } from "./active-events";
 
 export interface ProjectEconomics {
   quote_total: number;

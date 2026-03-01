@@ -3,7 +3,7 @@ import type { PgDatabase } from "drizzle-orm/pg-core";
 import { events } from "@resonansia/db";
 import { computeTotal } from "@resonansia/db";
 import { generateId, eventDataAdjustmentSchema } from "@resonansia/shared";
-import { getLabelId } from "../labels.js";
+import { getLabelId } from "../labels";
 
 export interface CorrectionInput {
   qty?: number | null;

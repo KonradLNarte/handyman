@@ -7,7 +7,7 @@ import {
   edgeDataLocatedAtSchema,
   edgeDataSupplierOfSchema,
   edgeDataUsesProductSchema,
-} from "./edge-data.js";
+} from "./edge-data";
 
 const schemaMap: Record<string, ZodSchema> = {
   member_of: edgeDataMemberOfSchema,

@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "2mb",
     },
   },
+  turbopack: {
+    resolveExtensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
+  },
 };
 
 export default nextConfig;

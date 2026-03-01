@@ -1,10 +1,10 @@
 import { eq } from "drizzle-orm";
-import { tenants } from "../schema/tenants.js";
-import { nodes } from "../schema/nodes.js";
-import { edges } from "../schema/edges.js";
-import { events } from "../schema/events.js";
-import { blobs } from "../schema/blobs.js";
-import { dicts } from "../schema/dicts.js";
+import { tenants } from "../schema/tenants";
+import { nodes } from "../schema/nodes";
+import { edges } from "../schema/edges";
+import { events } from "../schema/events";
+import { blobs } from "../schema/blobs";
+import { dicts } from "../schema/dicts";
 
 /**
  * Returns a Drizzle where clause for tenant_id filtering.

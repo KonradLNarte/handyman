@@ -1,4 +1,4 @@
-export * from "./schemas/index.js";
-export * from "./types/index.js";
-export * from "./labels/platform-defaults.js";
-export { generateId } from "./utils/uuid.js";
+export * from "./schemas/index";
+export * from "./types/index";
+export * from "./labels/platform-defaults";
+export { generateId } from "./utils/uuid";

@@ -10,7 +10,7 @@ import {
   eventDataStateChangeSchema,
   eventDataPaymentSchema,
   eventDataNoteSchema,
-} from "./event-data.js";
+} from "./event-data";
 
 const schemaMap: Record<string, ZodSchema> = {
   time: eventDataTimeSchema,

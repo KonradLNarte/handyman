@@ -2,7 +2,7 @@ import { eq, and, or } from "drizzle-orm";
 import type { PgDatabase } from "drizzle-orm/pg-core";
 import { edges, nodes } from "@resonansia/db";
 import { generateId, getEdgeDataSchema } from "@resonansia/shared";
-import { getLabelId, getLabelCode } from "./labels.js";
+import { getLabelId, getLabelCode } from "./labels";
 
 export interface CreateEdgeInput {
   sourceId: string;
