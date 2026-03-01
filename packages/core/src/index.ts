@@ -35,6 +35,9 @@ export type { AccumulatedRotRut } from "./economics/rot-rut-tracking";
 
 // AI
 export { aiGenerateObject, aiGenerateText } from "./ai/complete";
+export { aiComplete } from "./ai/client";
+export type { ModelTier, AiResponse } from "./ai/client";
+export { buildProjectContext } from "./ai/context";
 export { classifyMessage } from "./ai/classify-message";
 export type { ClassifyMessageInput } from "./ai/classify-message";
 export { translateMessage } from "./ai/translate";
