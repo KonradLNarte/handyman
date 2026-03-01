@@ -9,18 +9,20 @@
     "build": "tsc --noEmit"
   },
   "dependencies": {
-    "@resonansia/shared": "workspace:*",
-    "@resonansia/db": "workspace:*",
-    "ai": "^4.0.0",
     "@ai-sdk/anthropic": "^1.0.0",
     "@ai-sdk/openai": "^1.0.0",
     "@anthropic-ai/tokenizer": "^0.0.4",
-    "zod": "^3.24.0",
-    "uuid": "^11.0.0"
+    "@resonansia/db": "workspace:*",
+    "@resonansia/shared": "workspace:*",
+    "ai": "^4.0.0",
+    "drizzle-orm": "^0.39.0",
+    "postgres": "^3.4.0",
+    "uuid": "^11.0.0",
+    "zod": "^3.24.0"
   },
   "devDependencies": {
-    "typescript": "^5.9.0",
     "@types/node": "^20.0.0",
-    "@types/uuid": "^10.0.0"
+    "@types/uuid": "^10.0.0",
+    "typescript": "^5.9.0"
   }
 }
