@@ -61,6 +61,17 @@ export {
   approveInvoiceProposal,
 } from "./proposals/approve";
 
+// Quote Tokens
+export { generateQuoteToken, verifyQuoteToken } from "./quotes/token";
+
+// Signing
+export {
+  initiateSigning,
+  pollSigningStatus,
+  onSigningComplete,
+} from "./signing/bankid";
+export type { SigningStatus, SigningInitResult, SigningPollResult } from "./signing/bankid";
+
 // Messaging
 export { resolveSender, resolveSenderWithProjects } from "./messaging/sender";
 export type { ResolvedSender } from "./messaging/sender";
