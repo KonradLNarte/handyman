@@ -3,3 +3,5 @@ export { getActiveEvents } from "./queries/active-events.js";
 export type { ActiveEvent } from "./queries/active-events.js";
 export { getProjectEconomics } from "./queries/project-economics.js";
 export type { ProjectEconomics } from "./queries/project-economics.js";
+export { getDb, createSupabaseServiceClient } from "./client.js";
+export { withTenant, computeTotal } from "./queries/helpers.js";
