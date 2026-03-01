@@ -23,6 +23,15 @@ export { getActiveEventsForNode, getActiveEventsForProject } from "./events/reso
 // Economics
 export { calculateProjectEconomics } from "./economics/calculate";
 export type { ProjectEconomics } from "./economics/calculate";
+export { calculateRotRut } from "./economics/rot-rut";
+export type {
+  RotRutType,
+  RotRutConfig,
+  RotRutLineInput,
+  RotRutResult,
+} from "./economics/rot-rut";
+export { getAccumulatedRotRut } from "./economics/rot-rut-tracking";
+export type { AccumulatedRotRut } from "./economics/rot-rut-tracking";
 
 // AI
 export { aiGenerateObject, aiGenerateText } from "./ai/complete";
