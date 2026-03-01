@@ -34,7 +34,7 @@ export async function GET(
       JOIN labels l ON l.id = n.type_id AND l.domain = 'node_type' AND l.code = 'org'
       WHERE n.tenant_id = ${tenantId} LIMIT 1
     `);
-    const tenantRows = (Array.isArray(tenantResult) ? tenantResult : tenantResult.rows) as any[];
+    const tenantRows = (Array.isArray(tenantResult) ? tenantResult : (tenantResult as any).rows) as any[];
     const tenantData = tenantRows[0]?.data || { name: "Unknown" };
 
     // Load customer info
@@ -44,14 +44,14 @@ export async function GET(
       JOIN labels lt ON lt.id = e.type_id AND lt.domain = 'edge_type' AND lt.code = 'customer_of'
       WHERE e.to_id = ${proposal.projectId} AND e.tenant_id = ${tenantId} LIMIT 1
     `);
-    const customerRows = (Array.isArray(customerResult) ? customerResult : customerResult.rows) as any[];
+    const customerRows = (Array.isArray(customerResult) ? customerResult : (customerResult as any).rows) as any[];
     const customerData = customerRows[0]?.data || { name: "Kund" };
 
     // Load project info
     const projectResult = await db.execute(sql`
       SELECT n.data FROM nodes n WHERE n.id = ${proposal.projectId} AND n.tenant_id = ${tenantId}
     `);
-    const projectRows = (Array.isArray(projectResult) ? projectResult : projectResult.rows) as any[];
+    const projectRows = (Array.isArray(projectResult) ? projectResult : (projectResult as any).rows) as any[];
     const projectData = projectRows[0]?.data || { name: "Projekt" };
 
     const tenant = {
@@ -122,7 +122,7 @@ export async function GET(
       });
     }
 
-    return new NextResponse(pdfBuffer, {
+    return new NextResponse(new Uint8Array(pdfBuffer), {
       status: 200,
       headers: {
         "Content-Type": "application/pdf",

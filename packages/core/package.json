@@ -14,6 +14,7 @@
     "@anthropic-ai/tokenizer": "^0.0.4",
     "@resonansia/db": "workspace:*",
     "@resonansia/integrations": "workspace:*",
+    "@resonansia/pdf": "workspace:*",
     "@resonansia/shared": "workspace:*",
     "ai": "^4.0.0",
     "drizzle-orm": "^0.39.0",

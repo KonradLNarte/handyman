@@ -77,7 +77,7 @@ export async function submitRotRutAction(projectId: string) {
     JOIN labels lt ON lt.id = e.type_id AND lt.domain = 'edge_type' AND lt.code = 'customer_of'
     WHERE e.to_id = ${projectId} AND e.tenant_id = ${tenantId} LIMIT 1
   `);
-  const customerRows = (Array.isArray(customerResult) ? customerResult : customerResult.rows) as any[];
+  const customerRows = (Array.isArray(customerResult) ? customerResult : (customerResult as any).rows) as any[];
   const customer = customerRows[0]?.data;
   if (!customer?.rot_rut_person_number) {
     throw new Error("Customer has no personnummer for ROT/RUT");
@@ -87,7 +87,7 @@ export async function submitRotRutAction(projectId: string) {
   const projectResult = await db.execute(sql`
     SELECT n.data FROM nodes n WHERE n.id = ${projectId} AND n.tenant_id = ${tenantId}
   `);
-  const projectRows = (Array.isArray(projectResult) ? projectResult : projectResult.rows) as any[];
+  const projectRows = (Array.isArray(projectResult) ? projectResult : (projectResult as any).rows) as any[];
   const project = projectRows[0]?.data;
 
   const rotRutType: RotRutType = project?.rot_applicable ? "rot" : project?.rut_applicable ? "rut" : "none";

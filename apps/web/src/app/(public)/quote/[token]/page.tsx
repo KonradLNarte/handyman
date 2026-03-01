@@ -38,7 +38,7 @@ export default async function PublicQuotePage({ params }: Props) {
     JOIN labels l ON l.id = n.type_id AND l.domain = 'node_type' AND l.code = 'org'
     WHERE n.tenant_id = ${tenantId} LIMIT 1
   `);
-  const tenantRows = (Array.isArray(tenantResult) ? tenantResult : tenantResult.rows) as any[];
+  const tenantRows = (Array.isArray(tenantResult) ? tenantResult : (tenantResult as any).rows) as any[];
   const tenant = tenantRows[0]?.data || { name: "Företag" };
 
   // Load project info
@@ -46,7 +46,7 @@ export default async function PublicQuotePage({ params }: Props) {
     SELECT n.data FROM nodes n
     WHERE n.id = ${projectId} AND n.tenant_id = ${tenantId}
   `);
-  const projectRows = (Array.isArray(projectResult) ? projectResult : projectResult.rows) as any[];
+  const projectRows = (Array.isArray(projectResult) ? projectResult : (projectResult as any).rows) as any[];
   const project = projectRows[0]?.data;
 
   if (!project) {
@@ -68,7 +68,7 @@ export default async function PublicQuotePage({ params }: Props) {
     JOIN labels lt ON lt.id = e.type_id AND lt.domain = 'edge_type' AND lt.code = 'customer_of'
     WHERE e.to_id = ${projectId} AND e.tenant_id = ${tenantId} LIMIT 1
   `);
-  const customerRows = (Array.isArray(customerResult) ? customerResult : customerResult.rows) as any[];
+  const customerRows = (Array.isArray(customerResult) ? customerResult : (customerResult as any).rows) as any[];
   const customer = customerRows[0]?.data || { name: "Kund" };
 
   // Load quote lines
@@ -116,7 +116,7 @@ export default async function PublicQuotePage({ params }: Props) {
     )
     SELECT data FROM ranked WHERE rn = 1 ORDER BY root_id DESC LIMIT 1
   `);
-  const stateRows = (Array.isArray(stateResult) ? stateResult : stateResult.rows) as any[];
+  const stateRows = (Array.isArray(stateResult) ? stateResult : (stateResult as any).rows) as any[];
   const currentState = stateRows[0]?.data?.to_state || "draft";
   const alreadySigned = currentState === "active";
 

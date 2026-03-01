@@ -30,7 +30,7 @@ export async function generateQuoteAction(projectId: string) {
   const projectResult = await db.execute(sql`
     SELECT n.data FROM nodes n WHERE n.id = ${projectId} AND n.tenant_id = ${tenantId}
   `);
-  const projectRows = (Array.isArray(projectResult) ? projectResult : projectResult.rows) as any[];
+  const projectRows = (Array.isArray(projectResult) ? projectResult : (projectResult as any).rows) as any[];
   const project = projectRows[0]?.data;
 
   // Get customer for personnummer
@@ -40,7 +40,7 @@ export async function generateQuoteAction(projectId: string) {
     JOIN labels lt ON lt.id = e.type_id AND lt.domain = 'edge_type' AND lt.code = 'customer_of'
     WHERE e.to_id = ${projectId} AND e.tenant_id = ${tenantId} LIMIT 1
   `);
-  const customerRows = (Array.isArray(customerResult) ? customerResult : customerResult.rows) as any[];
+  const customerRows = (Array.isArray(customerResult) ? customerResult : (customerResult as any).rows) as any[];
   const customer = customerRows[0]?.data;
 
   const rotRutType = project?.rot_applicable
@@ -108,7 +108,7 @@ export async function sendQuoteAction(
     JOIN labels l ON l.id = n.type_id AND l.domain = 'node_type' AND l.code = 'org'
     WHERE n.tenant_id = ${tenantId} LIMIT 1
   `);
-  const tenantRows = (Array.isArray(tenantResult) ? tenantResult : tenantResult.rows) as any[];
+  const tenantRows = (Array.isArray(tenantResult) ? tenantResult : (tenantResult as any).rows) as any[];
   const tenantData = tenantRows[0]?.data || { name: "Företag" };
 
   const customerResult = await db.execute(sql`
@@ -117,13 +117,13 @@ export async function sendQuoteAction(
     JOIN labels lt ON lt.id = e.type_id AND lt.domain = 'edge_type' AND lt.code = 'customer_of'
     WHERE e.to_id = ${projectId} AND e.tenant_id = ${tenantId} LIMIT 1
   `);
-  const customerRows = (Array.isArray(customerResult) ? customerResult : customerResult.rows) as any[];
+  const customerRows = (Array.isArray(customerResult) ? customerResult : (customerResult as any).rows) as any[];
   const customerData = customerRows[0]?.data || { name: "Kund" };
 
   const projectResult = await db.execute(sql`
     SELECT n.data FROM nodes n WHERE n.id = ${projectId} AND n.tenant_id = ${tenantId}
   `);
-  const projectRows = (Array.isArray(projectResult) ? projectResult : projectResult.rows) as any[];
+  const projectRows = (Array.isArray(projectResult) ? projectResult : (projectResult as any).rows) as any[];
   const projectData = projectRows[0]?.data || { name: "Projekt" };
 
   // Load active quote lines for PDF
@@ -137,7 +137,7 @@ export async function sendQuoteAction(
     )
     SELECT * FROM ranked WHERE rn = 1
   `);
-  const lineRows = (Array.isArray(linesResult) ? linesResult : linesResult.rows) as any[];
+  const lineRows = (Array.isArray(linesResult) ? linesResult : (linesResult as any).rows) as any[];
 
   const lines = lineRows.map((row: any) => ({
     tempId: row.id,
