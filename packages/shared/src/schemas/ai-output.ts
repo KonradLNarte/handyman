@@ -32,3 +32,41 @@ export const messageIntentSchema = z.discriminatedUnion("type", [
 ]);
 
 export type MessageIntent = z.infer<typeof messageIntentSchema>;
+
+// AI Quote Generation schemas
+
+export const aiQuoteLineSchema = z.object({
+  description: z.string(),
+  qty: z.number().positive(),
+  unitPrice: z.number().positive(),
+  unitCode: z.string(), // 'hour', 'sqm', 'piece', etc.
+  isLabor: z.boolean(),
+  sortOrder: z.number().int(),
+  catalogMatch: z.string().optional(), // product name AI thinks matches
+});
+export type AiQuoteLine = z.infer<typeof aiQuoteLineSchema>;
+
+export const aiQuoteOutputSchema = z.object({
+  lines: z.array(aiQuoteLineSchema).min(1),
+  reasoning: z.string(), // AI explains its estimate (transparency)
+});
+export type AiQuoteOutput = z.infer<typeof aiQuoteOutputSchema>;
+
+// Delivery Note OCR schemas
+
+export const aiDeliveryNoteLineSchema = z.object({
+  articleName: z.string(),
+  qty: z.number().positive(),
+  unitPrice: z.number().positive(),
+  unit: z.string(),
+  catalogMatch: z.string().optional(),
+});
+export type AiDeliveryNoteLine = z.infer<typeof aiDeliveryNoteLineSchema>;
+
+export const aiDeliveryNoteSchema = z.object({
+  lines: z.array(aiDeliveryNoteLineSchema),
+  supplierName: z.string().optional(),
+  deliveryNoteNumber: z.string().optional(),
+  date: z.string().optional(),
+});
+export type AiDeliveryNote = z.infer<typeof aiDeliveryNoteSchema>;
