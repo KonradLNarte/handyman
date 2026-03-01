@@ -1,4 +1,4 @@
-import type { EmailAdapter, EmailParams } from "../types.js";
+import type { EmailAdapter, EmailParams } from "../types";
 
 export class ResendEmailAdapter implements EmailAdapter {
   private baseUrl: string;

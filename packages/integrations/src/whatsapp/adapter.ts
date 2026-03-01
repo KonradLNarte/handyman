@@ -1,4 +1,4 @@
-import type { MessagingAdapter } from "../types.js";
+import type { MessagingAdapter } from "../types";
 
 export class WhatsAppAdapter implements MessagingAdapter {
   private baseUrl: string;

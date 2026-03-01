@@ -1,4 +1,4 @@
-import type { MessagingAdapter } from "../types.js";
+import type { MessagingAdapter } from "../types";
 
 export class SmsAdapter implements MessagingAdapter {
   private baseUrl: string;

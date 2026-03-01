@@ -13,12 +13,12 @@ export type {
   EmailParams,
   RotRutClaim,
   RotRutResult,
-} from "./types.js";
+} from "./types";
 
-export { WhatsAppAdapter } from "./whatsapp/adapter.js";
-export { SmsAdapter } from "./sms/adapter.js";
-export { FortnoxAdapter } from "./fortnox/adapter.js";
-export { BankIdAdapter } from "./bankid/adapter.js";
-export { ResendEmailAdapter } from "./email/adapter.js";
-export { SkatteverketAdapter } from "./skatteverket/adapter.js";
-export { SupabaseStorageAdapter } from "./storage/adapter.js";
+export { WhatsAppAdapter } from "./whatsapp/adapter";
+export { SmsAdapter } from "./sms/adapter";
+export { FortnoxAdapter } from "./fortnox/adapter";
+export { BankIdAdapter } from "./bankid/adapter";
+export { ResendEmailAdapter } from "./email/adapter";
+export { SkatteverketAdapter } from "./skatteverket/adapter";
+export { SupabaseStorageAdapter } from "./storage/adapter";

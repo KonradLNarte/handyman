@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     "@resonansia/shared",
     "@resonansia/db",
     "@resonansia/core",
+    "@resonansia/integrations",
   ],
   experimental: {
     serverActions: {

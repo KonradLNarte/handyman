@@ -1,4 +1,4 @@
-import type { AccountingAdapter, InvoiceData, InvoiceStatus, CustomerData } from "../types.js";
+import type { AccountingAdapter, InvoiceData, InvoiceStatus, CustomerData } from "../types";
 
 export class FortnoxAdapter implements AccountingAdapter {
   private baseUrl: string;

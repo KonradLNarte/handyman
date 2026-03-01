@@ -1,4 +1,4 @@
-import type { TaxAdapter, RotRutClaim, RotRutResult } from "../types.js";
+import type { TaxAdapter, RotRutClaim, RotRutResult } from "../types";
 
 export class SkatteverketAdapter implements TaxAdapter {
   private baseUrl: string;

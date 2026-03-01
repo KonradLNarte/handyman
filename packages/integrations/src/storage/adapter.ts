@@ -1,4 +1,4 @@
-import type { StorageAdapter } from "../types.js";
+import type { StorageAdapter } from "../types";
 
 export class SupabaseStorageAdapter implements StorageAdapter {
   private baseUrl: string;

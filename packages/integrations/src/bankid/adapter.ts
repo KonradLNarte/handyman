@@ -1,4 +1,4 @@
-import type { SigningAdapter, SigningResult } from "../types.js";
+import type { SigningAdapter, SigningResult } from "../types";
 
 export class BankIdAdapter implements SigningAdapter {
   private baseUrl: string;
