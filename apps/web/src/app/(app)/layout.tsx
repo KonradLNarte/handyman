@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/supabase-server";
 import { LogoutButton } from "./logout-button";
+import { NotificationBell } from "./components/notification-bell";
 
 export default async function AppLayout({
   children,
@@ -17,8 +18,9 @@ export default async function AppLayout({
     <div className="min-h-screen flex">
       {/* Sidebar */}
       <aside className="w-56 bg-gray-900 text-white flex flex-col">
-        <div className="p-4 text-lg font-bold border-b border-gray-700">
+        <div className="p-4 text-lg font-bold border-b border-gray-700 flex items-center justify-between">
           Resonansia
+          <NotificationBell />
         </div>
         <nav className="flex-1 p-4 space-y-2">
           <Link

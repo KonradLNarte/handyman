@@ -45,3 +45,12 @@ export type { SendMessageInput, SendMessageResult } from "./messaging/send";
 export { generateAndSendWorkOrder } from "./messaging/work-order";
 export type { GenerateWorkOrderInput, WorkOrderResult } from "./messaging/work-order";
 export { onPersonAssignedToProject } from "./messaging/triggers";
+
+// Notifications
+export {
+  notifyProjectOwner,
+  getUnreadNotifications,
+  getUnreadCount,
+  markNotificationRead,
+} from "./notifications/notify";
+export type { NotificationType, NotificationInput } from "./notifications/notify";
