@@ -39,6 +39,7 @@ export { aiComplete } from "./ai/client";
 export type { ModelTier, AiResponse } from "./ai/client";
 export { buildProjectContext } from "./ai/context";
 export { generateQuoteProposal } from "./ai/generate-quote";
+export { extractDeliveryNote } from "./ai/ocr-delivery-note";
 export { classifyMessage } from "./ai/classify-message";
 export type { ClassifyMessageInput } from "./ai/classify-message";
 export { translateMessage } from "./ai/translate";
