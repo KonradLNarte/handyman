@@ -28,6 +28,10 @@ export type { ProjectEconomics } from "./economics/calculate";
 export { aiGenerateObject, aiGenerateText } from "./ai/complete";
 export { classifyMessage } from "./ai/classify-message";
 export type { ClassifyMessageInput } from "./ai/classify-message";
+export { translateMessage } from "./ai/translate";
+export type { TranslateMessageInput } from "./ai/translate";
+export { getGlossaryTerms } from "./ai/glossary";
+export type { GlossaryTerm } from "./ai/glossary";
 export { AI_TIERS } from "./ai/config";
 export type { AiTier } from "./ai/config";
 
