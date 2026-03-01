@@ -40,7 +40,7 @@ export async function getActiveEventsForNode(
       FROM ranked
       WHERE rn = 1
     `);
-    return result.rows as ActiveEvent[];
+    return (Array.isArray(result) ? result : result.rows) as ActiveEvent[];
   }
 
   return getActiveEvents(db, tenantId, nodeId, ids);

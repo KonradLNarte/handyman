@@ -48,12 +48,12 @@ export async function getActiveEvents(
       FROM events e
       WHERE e.tenant_id = ${tenantId}
         AND e.node_id = ${nodeId}
-        AND e.type_id = ANY(${typeIds})
+        AND e.type_id IN (${sql.join(typeIds.map(id => sql`${id}`), sql`, `)})
     )
     SELECT root_id, id, qty, unit_price, total, type_id, node_id, actor_id, occurred_at, data
     FROM ranked
     WHERE rn = 1
   `);
 
-  return result.rows as ActiveEvent[];
+  return (Array.isArray(result) ? result : result.rows) as ActiveEvent[];
 }

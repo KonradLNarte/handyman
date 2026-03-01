@@ -35,7 +35,7 @@ export async function loadLabels(
     ORDER BY domain, sort_order
   `);
 
-  const allLabels = result.rows as Label[];
+  const allLabels = (Array.isArray(result) ? result : result.rows) as Label[];
 
   // Tenant labels override platform labels on same domain+code
   const labelMap = new Map<string, Label>();
