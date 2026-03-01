@@ -1,0 +1,26 @@
+{
+  "name": "@resonansia/core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@resonansia/shared": "workspace:*",
+    "@resonansia/db": "workspace:*",
+    "ai": "^4.0.0",
+    "@ai-sdk/anthropic": "^1.0.0",
+    "@ai-sdk/openai": "^1.0.0",
+    "@anthropic-ai/tokenizer": "^0.0.4",
+    "zod": "^3.24.0",
+    "uuid": "^11.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "@types/node": "^20.0.0",
+    "@types/uuid": "^10.0.0"
+  }
+}
