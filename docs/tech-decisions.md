@@ -41,6 +41,16 @@ This document locks the technology choices for V1.
 | **Monorepo** | Turborepo | Shared types between packages |
 | **Token counting** | `@anthropic-ai/tokenizer` | Accurate token budgeting for AI context protocol. Do NOT estimate via `string.length / 4`. |
 
+### Drizzle Raw SQL Rules
+
+| Pattern | Correct | WRONG (will crash) |
+|---------|---------|-------------------|
+| `db.execute()` result | `result as unknown as T[]` | `result.rows as T[]` |
+| Array filter in SQL | `IN (${sql.join(ids.map(id => sql`${id}`), sql`, `)})` | `ANY(${ids})` or `ANY(${ids}::int[])` |
+
+These are postgres-js driver specifics. The `pg` driver works differently.
+Since we use `postgres` (not `pg`), these rules are mandatory.
+
 ---
 
 ## Next.js Architecture Rules (CRITICAL)

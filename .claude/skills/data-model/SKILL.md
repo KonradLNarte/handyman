@@ -136,3 +136,45 @@ const id = uuidv7(); // embeds creation timestamp = transaction time
 - **NEVER store binary content in the database** — blobs table holds metadata + URL only
 
 See `docs/resonansia-spec.md` section 2 for full interface definitions.
+
+## Drizzle Raw SQL Traps (CRITICAL)
+
+These bugs WILL occur if you write raw SQL with Drizzle. Memorize them.
+
+### Trap 1: db.execute() return shape
+
+The `postgres-js` driver returns rows DIRECTLY as an array.
+There is NO `.rows` property. This is different from `node-postgres` (`pg`).
+
+```typescript
+// ❌ WRONG — result.rows is undefined, "not iterable" crash
+const result = await db.execute(sql`SELECT * FROM labels`);
+const labels = result.rows as Label[];
+
+// ✅ CORRECT — result IS the array
+const result = await db.execute(sql`SELECT * FROM labels`);
+const labels = result as unknown as Label[];
+```
+
+EVERY call to `db.execute()` must treat the result as a direct array.
+Never write `.rows` anywhere in the codebase.
+
+### Trap 2: SQL array parameters with ANY()
+
+Drizzle's `sql` template wraps JS arrays as a "record" type.
+PostgreSQL cannot cast record to int[] or any array type.
+`ANY(${arr})` crashes. `ANY(${arr}::int[])` also crashes.
+
+```typescript
+// ❌ WRONG — "op ANY/ALL requires array on right side"
+sql`AND e.type_id = ANY(${typeIds})`
+
+// ❌ ALSO WRONG — "cannot cast type record to integer[]"
+sql`AND e.type_id = ANY(${typeIds}::int[])`
+
+// ✅ CORRECT — use IN with sql.join
+sql`AND e.type_id IN (${sql.join(typeIds.map(id => sql`${id}`), sql`, `)})`
+```
+
+This applies to ALL raw SQL queries that filter by an array of values.
+Always use `IN` with `sql.join`, never `ANY`.
