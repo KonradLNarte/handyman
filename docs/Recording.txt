@@ -1,0 +1,331 @@
+Just det, låt det ta upp den. Vi kan börja lite Erik, innan man kommer.
+
+Absolut, vi kör.
+
+Vi har flera olika bolag, flera olika projekt som vi driver.
+
+Det är.
+
+N-Tech Platforms, Hudinavian, som är en B2B plattform för fastighetstransaktioner, mäklare, fastighetsbolag, fastighetsutvecklare, bland annat, som använder den. Vi har ett fastighetsbolag som ska sälja och hyra ut fjällbostäder.
+
+Ja.
+
+Och så egentligen, BK.
+
+Vi har en verksamhet som håller på med, som heter Taylor events, som är ju då en resa och biljettbokningslåda. Sportevent, företagsresor, allt möjligt. allt från flyg hotellbokningar biljett till fotbolls-vm eller liknande och sen har vi ett par verksamheter till i reserummet och de är ju lite spetiga men det som är gemensamt för alla är egentligen att de har ett behov av att sätta upp en marknads.
+
+Nu laggar det.
+
+och stänger de här affärerna.
+
+Och det vi vill titta på är då, jag kallar det AI-agenter, flöden för att driva sälj. Och sen så kan det vara mera. För de här olika verksamheterna, mera bolags eller projektbaserade processer inne i dem. Och det jag ser framför mig i alla fall, det är AI-agenter. Så snarare det än att bygga plattformar med olika entiteter. Kommunikationssättet är en AI-agent som pratar om bokningar. En stuga i fjällen, då kommer man till den här vägen och säger att jag vill boka en stuga. Vi är fyra stycken.
+
+Var vill ni vara? Är det Åre? Ytterligare Sälen? Vart vill ni åka?
+
+Etcetera. Och sen så hjälper den till med bokningen och bollar upp rätt alternativ. I förlängningen kanske om man vill boka allt från. Liftkort till skidhyra, till restaurangen, till den här varan, så det är mer försäljning.
+
+Och det är väl ungefär, spelar det ingen roll vad det är för verksamhet, så ser den ungefär likadan ut.
+
+Tänkte jag, sen skulle den matas med olika data för att ge rätt svar. Men det vi också ser då, eftersom vi har olika verksamheter med ungefär samma behov, är att titta på, finns det en gemensam take på det här, där man kan bygga? En text, tack, som uppfyller behoven i hela verksamheten. Men med olika separata delar som är unika för de olika verksamheterna.
+
+Ja, ja, ja, det tycker jag spännande.
+
+Hej, det är Pettson här bara. Jag har hållit på med en kille som heter Mariano och han har byggt x antal outreach, agenter och så vidare. Bland annat uppringningar och han har satt upp Venus och liksom.
+
+Det har inte hänt ett skit egentligen, praktiskt sett.
+
+Men jag har hållit på med alla två totalt meningslösa frågor.
+
+Jag har lärt mig ungefär hur man inte ska göra. Han har byggt jävligt mycket avancerade automationer.
+
+Ja, ja. Men vad är ni för gäng?
+
+Det är ett gäng i Costa Rica.
+
+Det var historia, men vad är ni för gäng? Det är en costarican som får djurkort av mig. Okej. Ja. Men då släpper vi honom. Men vad är det här? Vilka pratar jag med? Vad är det för gäng? Är ni gamla polare som har startat det här?
+
+Så här är det. Jag har hållit på med resor och event sen .
+
+En reseräv alltså.
+
+Jag har haft grundgruva i Zimbabwe.
+
+Jag har gjort allt jag har gjort. Som har funnits.
+
+Okej.
+
+Men jag har alltid haft en event och en resebyrå som har rullat.
+
+Och nu vill du ut och resa med AIn eller?
+
+Men du, vad hette du sa du?
+
+Jag heter Pettson.
+
+Alla säger Pettson.
+
+Ja, men vet du vad? Det är lugnt. Jag kommer lösa det här. Du verkar vara crazy på ett sätt, så vi kommer nog funka ihop.
+
+Jag vill bara komma igång.
+
+Jag har köpt plattformen för en reseplattform.
+
+Som det är ett hundratal stora resebyråer som använder den.
+
+Som har API och konsoliderar API till bokning.
+
+Och liksom det är ganska smidigt. Den har ett ganska bra UX utifrån att till och med de på kontoret kan använda dem.
+
+De använder bävra papper och Excel Sheet fortfarande va. Jag är inget bättre än det ändå, själv alltså. Det är ju skönt.
+
+Jag har ett kontor som drivs av min exfru och Dova.
+
+De är kvar på fast ålder. Kommer du ihåg när det fanns Max?
+
+Ja, ja, visst.
+
+Ja först de är inte så från, de är djurens fästmän.
+
+Nu ringer Ring så vill du inte lämna den här. De bryr sig hela vägen tills du är klar.
+
+Jag fattar.
+
+Så du vill ge dem ett verktyg så att de bara hagar in saker som de kan producera.
+
+Dels egna produkter och dels andras produkter.
+
+Men vad sa du för någonting? Det ska bada in saker, vad sa du?
+
+Taylor event heter den, du kan titta på den sajten.
+
+Den är byggd i HTML eller någonting sånt.
+
+Taylor event.
+
+Ja, jag kan skicka den på den nya plattformen.
+
+Ja.
+
+Det får inte vara för krångligt för dem. Då har jag köpt den här plattformen.
+
+Den startas upp.
+
+Anton ska få börja prata med dem imorgon.
+
+Den handhar själva produkten.
+
+Då finns det ytterligare en plattform som ägs av Stenbeck och Kinnevik.
+
+De har en hotellbokningssajt som är helt fantastisk.
+
+Och den paketerar då för urtidning.
+
+Och den har ägarportaler och allting sånt.
+
+Och jag har inga problem att använda de här plattformarna. Sen vill jag lägga det här lagret på med.
+
+Med kump-ackvisition, med content, med var lite smartare än alla andra va.
+
+Och sen kanske klyka ihop AI med CRM-et.
+
+En gång i tiden så skulle man leta tvillingar, det är inte så krångligt idag va. Men att hitta de här, som gör att de här systemen som funkar, som är enkla att använda för dem på kontoret.
+
+Ja, men det tror jag.
+
+Det här är bassystem som turistbranschen använder idag.
+
+Vi har ungefär 100 000 biljetter som ska säljas i två matcher den 1 och 8 augusti.
+
+Då kommer det.
+
+Se om världens mest kända lag har spelat fotbollsmatcher i Stockholm och Göteborg.
+
+Ja, det är häftigt.
+
+Och då ska vi försöka sälja för många som möjligt.
+
+Med hotell, med biljett, hotell, med biljett, hotell, free game, med biljett, hotell, free game.
+
+Men så jag är med, pratar du om att du vill ha hjälp till helgen?
+
+Nej, nej, nej.
+
+Nej, nej.
+
+Vi kommer behöva vara uppe till första april ungefär med ett gäng med en AI-agentstack.
+
+Jag fattar.
+
+Och då är det själva gulden vi behöver hitta.
+
+Det är själva contentet som vi ser bra ut som vi behöver hitta. Vi behöver hitta det billigaste sättet att få in acceptition.
+
+Då har vi flera olika vertikaler.
+
+Vi har den här resebyrågrejen. Vi har fotbollsmatcherna som vi har kontroll på själva.
+
+Jag tänker att det känns. För min del blir det lite för detaljerat nu. Jag behöver få en lite bättre bild av vad vi håller på med. Anton och Erik är med här. Alltså. Vad vill vi? Vad tänker ni? Varför ringer ni? Vill ni ha hjälp? Hur då?
+
+Vad? Är det det jag försöker förklara just nu?
+
+Att lagret över en produkt, över en e-commerce, lagren runt e-commerce grejen.
+
+Sen om det är uthyrning av villor och hus eller om det är.
+
+Fotbollsbiljetter behöver vi laget runt för att sälja det och handha det.
+
+Just det. Och då låter det som att det finns potential till att utveckla väldigt mycket på väldigt många olika ställen. Det tycker jag är helt fenomenalt. Och det som händer nu med inom utvecklingen senaste månaderna är ju verkligen att. Det är inte så att utvecklare kommer att bli arbetslösa. Nu när det är så lätt att göra kod och bygga gränssnitt så kommer det blir 100 gånger så mycket mjukvara, 100 gånger så många saker kommer att lösas. Jobbar vi framåt här så kommer ni att göra en väldigt stor del själva av att liksom etablera de här grejerna. Vi kan hjälpa till med att komma igång och få igång saker. Men
+
+Ja, nu fastnade jag.
+
+Brainfreeze!
+
+Vad sa du?
+
+Brainfreeze!
+
+Ja, men lite brainfreeze. Alltså, för det vi har, vi har. Alltså, jag håller på och är ordentligt insnöad på så här försöker förstå det senaste inom agenter och agent styrd utveckling. Har håller på och bygger en mjukvarufabrik som börjar bli skitduktig på att verkligen göra samtal till riktiga produkter. Och. har lyckats bygga en datamodell där både ett koncernredovisningsprogram, ett socialt nätverk för kids med sina idoler och andra fans och ett projekthanteringssystem kör samma datamodell. Som är optimerad för att agenter enkelt ska kunna förstå allt data, det ska vara skit. Snabbt använda så lite kontext som möjligt för att plocka rätt data. För att göra avståndet mellan Det man vill kunna ha på sin skärm, de verktyg man vill ha och så vidare. Att göra det lättare att bara kunna prata med sin AI och så händer det och saker sker på ett strukturerat sätt. Det blir lite tekniskt mumbo jumbo om man inte är med på vad jag pratar om. I varje system så finns det en databas i botten som någon har byggt.
+
+Många gånger är den byggd av folk som inte är så duktiga på att bygga databaser för att frontend utvecklare När de började liksom webben kom Då slutade det vara coolt att bygga databaser. Då fick frontend utvecklare som inte gillar databaser börja designa hur datamodeller ser ut och det är skräp. Och det som vi har byggt som egentligen borde vara obvious, det är bara en enkel graf data. Där vi har noder, kanter och events. Det är de enda tre tabellerna som finns. Vilket gör att allting är sökbart där inne och man ser att schemat förklarar sig själv. Alla noder hänger ihop. Det gör det optimalt bara för att på ett enkelt sätt kunna spara olika sorts data.
+
+Vill vi lösa saken inför att göra det enkelt med bokningar på skidresorna så kan det vara en grej som är så här. Det får vi in i samma databas. Ska vi göra någonting i form av hur vi lägger upp contentstrategier? Det går in i samma databas. Det blir så himla tydligt att agenterna pratar med samma sak hela tiden. Alla pratar med samma sak.
+
+Alla de här sakerna som du pratar om Pettson, kan vi absolut sitta och prata om och du får berätta mer detaljerat. Jag kan förbereda och ställa väldigt konkreta frågor som jag vet förtydligar väldigt bra för AI. Och så kan vi ta en sak i taget. Men jag tror inte vi kommer kanske just nu lösa alla problem. Jag är lite nyfiken på, för vår del, vi är nio personer nu som jobbar ihop och! Vi började jobba, alltså jag har jobbat med AI länge men i december så blev det verkligen så här, okej nu börjar vi jobba mycket med AI och i januari så tog min fru och jag ett lån för att kunna liksom vara hela vårt gäng och att vi ska sluta fakturera till kund för att bara fokusera på AI och bli så jävla duktiga på det. Vi är nio personer som håller på med det varje dag. Och får in lite kunder och så, men jag är ju verkligen uppfinnar-Jocke, så jag sitter med fyra projekt. Men vi levererar ju till kunder, det blir toppen. Och vi är superöppna för vad som helst. Finns det pengar så att vi kan, det spännande är att vi alla har ganska låga löner.
+
+Får vi bara in något hyfsat bra projekt så kan vi rikta ett helt fucking kreativt team. Har ni pengar så skulle ni kunna få nio mänskliga agenter som i sin tur hjälper till att få ut fucking agenter. Och göra det till den fetaste resefirman som någonsin funnits.
+
+Det låter bra.
+
+Jag har en fråga, Konrad. Har han rökt mycket gräs, snubben i soffan?
+
+Nej, men jag. Eller du kanske också?
+
+Jag har inte rökt något gräs, inte.
+
+Men jag är hur trött som helst. Det har varit en lång helg. Åh, fan. Ja, jag tyckte du såg skör ut.
+
+Men jag kan ju säga det om Björn. Det var ganska fett, för jag har hållit på och byggt massa olika system och så satt vi inne hos Björn i januari och. Så jag längtar till den dagen så jag skulle kunna bygga ett nytt sätt att hantera ljus, DMX-lampor och grejer.
+
+Jag har också drivit ett eventföretag i 15 år.
+
+Jag trodde att vi kunde göra det nu, Björn. Jag hjälpte igång med lite Claude Code och lite Star Trek. Morgonen efter hade Björn sett det hela natten. kunde inte sluta. Så kom jag in och då har han lyckats få ett hans drömprogram att funka som kopplar upp sig med nätverkskabel till själva DMX-routern eller dongen som sen går ut med kablar och kan pixelmappa de här grejerna. Det kan vi göra för att vi bara litar på att vi kan och testar.
+
+Skönt.
+
+Ja. Jag har byggt ett koncernredovisningssystem som är i grad  med kognos på en vecka, parallellt med att jag gör en massa andra grejer.
+
+Hur mycket använder ni lovable nu?
+
+Jag tycker faktiskt fortfarande om lovable ganska mycket. Jag gillar dialogen med det, men håller på och testar lite annat. Det jag jobbar mycket med nu är just att bygga, alltså om ni har hört om Dark Factories eller att verkligen koden bara utvecklar sig själv. Man har ingen insyn, vilket vi typ är, för det är ingen av oss som är kodare. Jag har en känsla, jag håller på väldigt mycket med data. business intelligence hela livet. Mitt yrke är datatrollkarl. Och jag kan förstå strukturer men ingen av gänget kan koda utan så vi måste bara bli duktiga på att hitta sätt att förlita oss på AIn.
+
+Det jag ser är väl att koppla an till Petsons input där. Vi har shitload av projekt.
+
+Och där ser vi ju liksom.
+
+Det är någonstans marknadsföring att få in leads i någon jävla funnel.
+
+Vi ska ta den här sälj-funneln och se till att vara jävligt aktiva i den.
+
+Och liksom använda och äga där för att bli så bra på att stänga de här leads.
+
+I vissa fall så kommer en människa involverad vid något tillfälle, en demo eller ett säljkod eller liknande.
+
+I andra fall så kanske hela transaktionen, som ska köpa fotbollsbiljett, så behövs det faktiskt inte någon som kanske svarar i telefon alltid.
+
+Men så det är liksom en marknadsföring och sälj och sen så finns det någon form av on-platform agenter. Det vill säga när användarna är inne och de ska. så har man någon att prata med som representerar produkten eller teamet eller bolaget. Och de här, det som jag klurar på, jag kommer liksom, jag har en IT-bakgrund i botten, jag har på mig mycket annan business här under de senaste åren, men det är ju det att starta på rätt plattform, så här, du kan som handikappad, . Men att det ändå blir det om tre månader, sex månader, tolv månader, tempot som utvecklingen går i nu, så tycker jag det är jävligt viktigt att man börjar på rätt ställe. Och inte bygger fast sig i någonting som sen blir outbated.
+
+Nej, jag håller helt klart med. Alla gör ju sin grej såklart, men jag upplever att jag håller med. Alltså att det jag håller på med ligger väldigt långt fram i just. Att kunna släppa mer jobb till AIn. Att den verkligen kan börja förstå och utvecklas själv på ett sätt som gör det tydligt för oss var den är. Var den är. Jobba med lite som GitHub. Att AIn, saker som händer, får checkas in. Och att det kan krävas vissa olika
+
+regler för att saker ska släppas in i det som är sant.
+
+Men det jag förstår, det är en deadline första april.
+
+Där ska det vara någon sorts agenter som på ett billigt sätt når ut till folk som skulle kanske vilja köpa de här biljetterna. Och där brinner det runt knuten hör jag. Är det någonting annat som brinner eller är det någonting som vi skulle kunna prata om att ha som första projekt? Och så fort det är klart så kan ni kolla vad är nästa projekt som är mest viktigt. Jag ser det här som, jag vet inte vad man ska ha för liknelse, jag tog en liknelse med Anton, jag vet inte om den är så jävla bra, men som ett träd. Om vi har en massa olika projekt så ska vi inte ha tio olika lösningar, utan man ska försöka ha så likt som möjligt och se, kan vi återanvända något? Eller lite som du var inne på, finns det en gemensam central kärna? liknelse med Anton att även om vi har träd då liksom det är olika grenar ut så den första grenen kanske är det här till april och i den grenen så använder man bara som A, B och C.
+
+Ja.
+
+Och den andra grenen som kanske är fotbolls-VM eller vad fan det nu är eller så då använder man B, C, D och F. Men någonstans att det finns liksom en återanvändning i de här olika så att vi Vi slipper starta om från scratch och utveckla betalning både tidsmässigt och pengamässigt. Om det är så att det går att återanvända de här och jobba smartare med det sättet.
+
+Ja, men det är uppfattat.
+
+Vi behöver runda av här nu, för vi är lite försenade in i nästa möte. Men skulle vi kunna, jag tycker ändå att vi är jätteintressant och ni verkar svinsköna.
+
+Skulle vi kunna ta en återkoppling?
+
+Ja, men det tycker jag absolut. Jag tycker det låter jättespännande. Jag är Uppfinnar-Jocke, men jag har hållit på med data i 25 år.
+
+Är ni i Stockholmsområdet?
+
+Ja, jag sitter i Sickla i Nacka.
+
+Jag tror att vi skulle kunna göra något ganska fett ihop, för ni har någonting. Som vi kan applicera den här tekniken på. Vi har flera applikationer vi håller på med, men det är kul med att ni som är lite mer lite alerta, då kommer ni vara delaktiga i utvecklingen. Så det skulle nog vara svinkul.
+
+Det låter fantastiskt.
+
+Grymt! Vi ska ta ett fysiskt möte nästa gång, så blir det lite lättare.
+
+Ja, det låter toppen.
+
+Ja, men jättebra.
+
+Jag hör av mig till dig, Konrad, så bestämmer vi upp någonting.
+
+Ja, men toppen.
+
+Tack grabbar!
+
+Tack så mycket!
+
+Kom ihåg också att om det är första april som gäller, försök ta nästa möte så fort som möjligt. Vad sa du, Björn? Om det är första april som gäller, se till att det är första mötet, att vi kommer igång så fort som möjligt nu. så vi prioriterar att skaka hand på någonting så vi kan börja jobba.
+
+Perfekt.
+
+Tjena!
+
+Har du lagt på?
+
+Ja, det tror jag.
+
+Fan, inget jävla snack om vad du kan göra billigt alltså. De där är ju Pettson sitter ju på Cash.
+
+Pettson Entreprenör Sverige.
+
+Pettson, den med två s va?
+
+Ja, det brukar det vara.
+
+Vad hette de filmerna?
+
+Taylor.
+
+Hette de det?
+
+Ja, men jag tror inte han sitter som.
+
+För att det här är ju också, man hör ju, de här kommer ju fortsätta.
+
+Så får vi en bra grund för de här så kan det här förhoppningsvis bli en.
+
+Miriam.
+
+En grej.
+
+Det här med att ni kommer att lösa det här själva. Kom ihåg att det är guldruschen och folk vet inte om det. Skapar vi kanaler där vi berättar om sånt här?
+
+Om vi kommer in på ställen. Där. Vi lyckas få dem att vara med och skapa och vi lyckas vara kvar. Då har vi dem som våra arbetare. Då bidrar ju de till att göra någonting smart.
+
+Vi får se till att alltid vara smartare. Men där tänker jag också att man kan säga också att vi kan göra det så användarvänligt så att ni snart skulle kunna ta över det här. Och att ni kan sköta allt. Agda, 63. Vi löser det så lätt att det handlar mer om att vi lyckas göra någonting grymt än att vi snart runt hörnet vem som helst kan göra det. Att vi har låga löner och allt sånt där.
+
+Det där kommer ju.
+
+Det är klart att de kommer sitta och säga, ja men vad ska vi komma överens om? Ja men kommer du ihåg på det här mötet att de sa det?
+
+Men däremot så är det också, vi har inte tillräckligt många kunder. När vi har fler kunder än vi kan hantera, 100%, då ska vi inte säga det.
+
+Jag är bara glad att vi sätter den här, för här kan vi reda ut en massa roliga grejer. Ja, det är nice.
+
+Ja men bra jobbat! Ja men bra jobbat!
+
+Kul att de hörde av sig!
+
+Det är faktiskt Gloria som fixade det! Jaha! Och den där Anton som är, han är med i Skogshave, han är med i den här Erik Lass X.
