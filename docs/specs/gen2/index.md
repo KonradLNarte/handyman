@@ -1,6 +1,6 @@
 # RESONANSIA MCP SERVER — GEN 2 SPEC (v0)
 
-> **Lineage:** gen0-v5 → gen1-v1 → gen2-v0
+> **Lineage:** gen0-v5 → gen1-v1 → gen1.1 → gen2-v0
 > **Base:** gen1-v1 (2026-03-03, Claude Opus 4.6)
 > **Protocol version target:** MCP 2025-11-25, A2A v0.3
 > **Tech profile:** Supabase (see section 10.2)
@@ -587,7 +587,77 @@ what_next_gen_should_watch_for:
   - gen1-impl should report [FEEDBACK:gen1-impl] on any spec ambiguity encountered
 ```
 
-### 12.1 Previous generation summary (gen0)
+### 12.1 Generation summary (gen1.1 — remediation pass)
+
+```yaml
+generation: gen1.1
+author: human review + Claude Opus 4.6
+date: 2026-03-04
+lineage: gen0-v5 → gen1-v1 → gen1.1
+type: patch  # not a full generation — remediation pass before gen2 evolution
+
+what_was_built: >
+  Remediation pass closing 6 gaps identified by external review of the gen1-v1 spec.
+  No new features or decisions — only precision improvements to make the spec
+  truly implementation-ready. Changes: (1) blob_stored added to projection matrix
+  (was missing despite being in events CHECK constraint), (2) projection matrix
+  expanded from prose summaries to full SQL pseudocode with edge cases and error
+  conditions for all 10 intent_types, (3) capture_thought prompt template expanded
+  from skeleton to production-ready prompt with JSON schema, few-shot examples,
+  LLM parameters, and post-processing rules, (4) cross-tenant RLS decision D-013
+  augmented with 3 concrete attack scenarios and technical trigger conditions,
+  (5) this gen1.1 summary added acknowledging the broken feedback loop,
+  (6) A2A spec stability dependency given explicit [RESEARCH:gen2] marker.
+
+feedback_loop_status: |
+  BROKEN — gen1-impl has not run yet. The generational protocol (§0.2 step 8)
+  requires implementation feedback before the next spec generation. Gen1.1 is a
+  SPEC-ONLY remediation pass, not a substitute for gen1-impl feedback.
+
+  The following decisions have question_this_if triggers that REQUIRE runtime data
+  from gen1-impl. Gen2-spec SHOULD NOT change these decisions without gen1-impl
+  measurement data:
+
+  [REQUIRED:gen1-impl] D-008 (bulk embedding strategy):
+    trigger: "Import volume exceeds 10K nodes or embedding queue exceeds 1000 pending"
+    data_needed: actual embedding throughput, queue depth under load
+
+  [REQUIRED:gen1-impl] D-009 (entity deduplication thresholds):
+    trigger: "Duplicate entities exceed 5% of total OR false positives exceed 2%"
+    data_needed: actual dedup precision/recall on Pettson scenario + real data
+
+  [REQUIRED:gen1-impl] D-016 (capture_thought synchronous execution):
+    trigger: "capture_thought p95 latency exceeds 10s or CPU exceeds 1.5s"
+    data_needed: actual p50/p95 latency and CPU measurements on Supabase Edge
+
+  [REQUIRED:gen1-impl] D-013 Scenario C (SET LOCAL skip):
+    trigger: "SET LOCAL missed in any code path"
+    data_needed: integration test results confirming SET LOCAL coverage
+
+  Until gen1-impl provides these measurements, the decisions above are THEORETICAL.
+  They are the best design choices given available information, but may need revision
+  based on runtime reality.
+
+what_was_learned:
+  - The gen1-v1 spec was internally consistent (all DECIDE/RESEARCH markers resolved)
+    but had precision gaps that would force an implementer to make design decisions
+  - Projection matrix prose descriptions were the largest gap — an implementer would
+    need to decide column values, edge case handling, and transaction boundaries
+  - The capture_thought prompt skeleton was too abstract — critical details like output
+    schema, few-shot examples, and LLM parameters were missing
+  - RLS attack scenarios revealed that D-013's question_this_if was governance-oriented
+    ("security audit requires it") rather than technically triggered — now has concrete
+    scenarios with measurable trigger conditions
+  - blob_stored was a simple omission but broke the completeness invariant (every
+    intent_type in the CHECK constraint must have a projection entry)
+
+what_next_gen_should_watch_for:
+  - gen1-impl MUST report [FEEDBACK:gen1-impl] markers before gen2-spec begins
+  - The 4 [REQUIRED:gen1-impl] decisions above are the highest-priority feedback items
+  - A2A Protocol stability must be verified before any gen2 A2A work (see federation.md)
+```
+
+### 12.2 Previous generation summary (gen0)
 
 ```yaml
 generation: gen0-v5

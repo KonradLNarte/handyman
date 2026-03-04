@@ -110,6 +110,18 @@ gen1:
     - Streaming support via Streamable HTTP transport aligns with A2A SSE ✓
 
 gen2:
+  # [RESEARCH:gen2] A2A Protocol version stability check
+  # [gen1.1] This marker is MANDATORY before any gen2 A2A work begins.
+  # A2A v0.3 was current as of Feb 2026. The protocol is pre-1.0 and may
+  # have breaking changes to AgentCard format, task lifecycle, or auth.
+  # Gen2-spec MUST:
+  #   1. Check current A2A version (may be v0.4, v1.0, or deprecated)
+  #   2. Compare AgentCard schema against gen1 research findings above
+  #   3. If breaking changes: revise gen2 A2A DECIDE markers below
+  #   4. If v1.0 released: treat as stable, remove experimental caveats
+  #   5. If deprecated/abandoned: remove A2A from gen2 scope entirely
+  # question_this_if: "A2A v1.0 released with breaking changes from v0.3"
+
   - "[DECIDE:gen2] A2A AgentCard generation"
     description: "Each Resonansia tenant publishes an AgentCard at /.well-known/agent-card.json"
     content: |
@@ -120,6 +132,7 @@ gen2:
         - authentication: OAuth 2.1 (same as MCP auth)
         - supportedModes: ["text"] (gen2), ["text", "data"] (gen3)
     question_this_if: "A2A protocol changes significantly before gen2 implementation"
+    depends_on: "[RESEARCH:gen2] A2A Protocol version stability check (above)"
 
   - "[DECIDE:gen2] A2A server endpoint"
     description: "Resonansia exposes A2A message/send endpoint alongside MCP"

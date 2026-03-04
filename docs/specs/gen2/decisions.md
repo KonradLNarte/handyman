@@ -255,6 +255,57 @@ decisions:
   outcome: upheld
   action: "Each tool has a distinct mental model: query_at_time answers 'what did THIS entity look like THEN?' (point-in-time state), find_entities answers 'which entities match THESE criteria?' (discovery). Merging would increase parameter complexity and reduce discoverability. 15 tools is at the limit but justified by distinct purposes."
   spec_section_updated: "N/A — no change, assumption upheld"
+
+# ═══ GEN1.1 REMEDIATION ENTRIES ═══
+
+- id: R-001
+  generation: gen1.1
+  type: remediation
+  gap: "blob_stored missing from projection matrix (§3.4)"
+  severity: low
+  action: "Added blob_stored projection with full pseudocode: event INSERT + blob INSERT, with pre-tx object storage upload and orphan mitigation notes."
+  spec_section_updated: "3.4 — projection matrix"
+
+- id: R-002
+  generation: gen1.1
+  type: remediation
+  gap: "Projection matrix pseudocode was skeleton-level prose, not implementation-ready"
+  severity: high
+  action: "Expanded all 10 intent_types to full SQL pseudocode with: exact column values, pre_validate steps, edge case handling, error conditions, and post_tx side effects. An implementer needs zero design decisions."
+  spec_section_updated: "3.4 — projection matrix (complete rewrite)"
+
+- id: R-003
+  generation: gen1.1
+  type: remediation
+  gap: "capture_thought prompt_skeleton was too abstract for implementation"
+  severity: high
+  action: "Replaced skeleton with production-ready prompt template including: system/user message split, JSON output schema, 3 few-shot examples (Pettson domain), LLM call parameters (model, temperature, max_tokens, timeout), token budget analysis, and post-processing rules."
+  spec_section_updated: "3.2 — capture_thought prompt_template"
+
+- id: R-004
+  generation: gen1.1
+  type: remediation
+  gap: "D-013 cross-tenant RLS had governance triggers but no technical attack scenarios"
+  severity: medium
+  action: "Added 3 concrete attack scenarios (A: grants bypass, B: excessive tenant_ids, C: SET LOCAL skip) with blast radius analysis, what RLS catches vs misses, and measurable trigger conditions. D-013 question_this_if updated from governance to technical triggers."
+  spec_section_updated: "4.7 — D-013 attack scenarios"
+  cross_reference: "D-013 in this file"
+
+- id: R-005
+  generation: gen1.1
+  type: remediation
+  gap: "Broken feedback loop — gen1-impl has not run, no runtime data available"
+  severity: process
+  action: "Added gen1.1 generation summary (§12.1) acknowledging the gap. Listed 4 decisions with [REQUIRED:gen1-impl] markers (D-008, D-009, D-016, D-013 Scenario C) that need runtime measurements. Stated gen2-spec SHOULD NOT change these without gen1-impl data."
+  spec_section_updated: "12.1 — gen1.1 generation summary"
+
+- id: R-006
+  generation: gen1.1
+  type: remediation
+  gap: "A2A spec stability is an unresolved dependency for gen2"
+  severity: medium
+  action: "Added [RESEARCH:gen2] marker to federation.md §5.4 requiring A2A version stability check before any gen2 A2A work. Added depends_on link from DECIDE:gen2 AgentCard to the new RESEARCH marker."
+  spec_section_updated: "5.4 — A2A integration roadmap gen2 block"
 ```
 
 ---

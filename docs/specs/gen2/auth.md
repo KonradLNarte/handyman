@@ -175,7 +175,80 @@ decision: |
   Cross-tenant edge traversal is verified in application code by querying grants table.
   RLS serves as defense-in-depth — even if application code has a bug, RLS prevents
   accessing data outside the token's tenant_ids.
-question_this_if: "Security audit requires pure RLS without service_role bypass"
+
+# [gen1.1] ATTACK SCENARIOS — technical analysis of D-013 blast radius
+#
+# These scenarios define the concrete security boundary of Option C.
+# They serve as technical triggers for D-013's question_this_if.
+#
+# SCENARIO A: Application bug bypasses grants check
+#   Attack: A code path in explore_graph or connect_entities fails to call
+#           the grants table check before traversing a cross-tenant edge.
+#   What RLS catches: Nothing for same-token tenants. If the token has
+#           tenant_ids=[T1,T2], SET LOCAL includes both, so RLS permits
+#           reading data from T1 and T2. The grants check is the ONLY
+#           barrier for node-level access within permitted tenants.
+#   What RLS misses: An agent with T1+T2 access could read ALL T2 nodes
+#           without any grant. Grants provide node-level filtering that
+#           RLS does not enforce.
+#   Blast radius: WITHIN-TOKEN ONLY. An agent cannot access T3 if T3
+#           is not in its tenant_ids. The blast is limited to over-broad
+#           access within the set of tenants the token already covers.
+#   Mitigation: Audit log (§4.9) records every cross-tenant traversal.
+#           Periodic audit: flag traversals without matching grants.
+#
+# SCENARIO B: Token with excessive tenant_ids
+#   Attack: Admin issues a token with tenant_ids=[T1,T2,T3,T4,...] covering
+#           tenants the agent should not access (misconfiguration, not breach).
+#   What RLS catches: SET LOCAL sets all tenant_ids from the token. RLS
+#           policies permit access to all of them. There is no "minimum
+#           privilege" enforcement at the RLS layer.
+#   What RLS misses: Scope-based filtering (§4.8) is the only limit.
+#           If scopes include "tenant:*:read", the agent reads everything.
+#   Blast radius: ALL DATA in all tenants listed in the token. This is
+#           a configuration error, not a code bug.
+#   Mitigation:
+#     - Token issuance MUST be admin-only (D-012).
+#     - Token lifetime: 1h max for agents, 30d for partners (§4.4).
+#     - [REQUIRED:gen1-impl] Log and alert when a token has >3 tenant_ids.
+#     - [DECIDE:gen2] Consider per-tenant token issuance (one token per tenant)
+#       instead of multi-tenant tokens to eliminate this class of error.
+#
+# SCENARIO C: Edge Function code path skips SET LOCAL
+#   Attack: A code path reaches the database query without first calling
+#           SET LOCAL 'app.tenant_ids'. The GUC is unset or retains a
+#           value from a previous request in the same connection.
+#   What RLS catches: If app.tenant_ids is unset, current_setting()
+#           throws an error (unless a default is set). If a default of
+#           '{}' (empty array) is set, RLS policies deny all reads
+#           (tenant_id = ANY('{}') is always false). This is SAFE.
+#   What RLS misses: If the previous request's tenant_ids leak into the
+#           current request (connection pooling without RESET), the current
+#           request could access the previous request's tenants.
+#   Blast radius: PREVIOUS REQUEST'S TENANTS. Not unbounded — limited to
+#           whatever the previous request had access to.
+#   Mitigation:
+#     - CRITICAL: gen1-impl MUST call SET LOCAL (not SET) so the GUC
+#       is scoped to the current transaction. After COMMIT/ROLLBACK,
+#       the value reverts.
+#     - If using connection pooling: DISCARD ALL or RESET at connection
+#       checkout. Supabase Edge Functions use per-request connections
+#       (no pooling concern for gen1).
+#     - [REQUIRED:gen1-impl] Integration test: verify that a request
+#       without SET LOCAL receives zero rows (not previous request's data).
+#
+# TECHNICAL TRIGGERS FOR question_this_if:
+#   1. Security audit finding: "service_role key stored in Edge Function
+#      environment is extractable" → migrate to per-user Supabase client
+#      or pure RLS (Option A).
+#   2. Any Scenario C occurrence in production (SET LOCAL missed) →
+#      add middleware-level enforcement (abort request if GUC not set).
+#   3. Tenant count per token exceeds 5 regularly → per-tenant tokens.
+
+question_this_if: |
+  (1) Security audit requires pure RLS without service_role bypass, OR
+  (2) Scenario C (SET LOCAL skip) occurs in production, OR
+  (3) Average tenant_ids per token exceeds 5.
 [DECIDE:gen2] "Migrate to JOIN-based RLS policies (Option A) for cross-tenant edges"
 ```
 

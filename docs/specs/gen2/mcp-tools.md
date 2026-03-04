@@ -234,44 +234,212 @@ capture_thought:
     5. Create edges between primary node and mentioned/found entities
     6. Emit event: "thought_captured"
     LLM must be type-node-aware: prompt includes tenant's available types and their schemas.
-  prompt_skeleton: |
-    Gen1-spec MUST refine this skeleton into a complete, tested prompt template.
-    This is the structural starting point — not a final prompt.
+  prompt_template: |
+    [gen1.1: expanded from skeleton to production-ready prompt]
 
-    ---
-    System: You are an entity extraction agent for the "{tenant_name}" knowledge graph.
+    # ── SYSTEM MESSAGE ──────────────────────────────────────────
+    # Sent as the system/developer message. Variables in {braces} are interpolated at runtime.
 
-    AVAILABLE ENTITY TYPES (from type nodes):
-    {for each type_node: name, description, label_schema as JSON Schema}
+    You are a structured entity extraction agent for the "{tenant_name}" knowledge graph.
+    Your task: given free-text input, extract structured entities, relationships, and action items.
+
+    RULES:
+    - Output ONLY valid JSON. No markdown, no explanation, no commentary.
+    - Classify entities using ONLY the types listed below. If no type fits, use "note".
+    - Map text attributes to the type's schema fields. Omit fields you cannot confidently extract.
+    - For mentioned entities, check the EXISTING ENTITIES list for potential matches.
+      Set existing_match_id to the ID if you are confident it's the same entity (>80% sure).
+      Set it to null if unsure or no match. Never guess an ID — when in doubt, set null.
+    - Relationships MUST use edge types from the AVAILABLE EDGE TYPES list.
+    - Action items are optional. Only include clear, actionable next steps implied by the text.
+    - All extracted data reflects what the text STATES. Do not infer facts not present in the input.
+    - If the input is too vague to extract any entity, return the FALLBACK structure (see below).
+
+    AVAILABLE ENTITY TYPES:
+    {entity_types_block}
+    # Runtime interpolation produces:
+    #   - name: "lead"
+    #     description: "A potential customer or contact"
+    #     schema:
+    #       required: [name]
+    #       properties:
+    #         name: { type: string }
+    #         phone: { type: string }
+    #         email: { type: string }
+    #         interest: { type: string }
+    #         source: { type: string }
+    #   - name: "booking"
+    #     ...
+    # Include ALL entity type nodes for the tenant. Max ~20 types at gen1 scale.
+
+    AVAILABLE EDGE TYPES:
+    {edge_types_block}
+    # Runtime interpolation produces:
+    #   - name: "contacted_via"
+    #     description: "Communication channel between entities"
+    #   - name: "includes"
+    #     ...
 
     EXISTING ENTITIES (potential deduplication targets):
-    {top N entities by recent activity or embedding similarity to input, format: id, type, name/summary}
+    {existing_entities_block}
+    # Runtime interpolation: fetch top 20 entities by embedding similarity to input text.
+    # Format per entity:
+    #   - id: "uuid-here"
+    #     type: "lead"
+    #     name: "Johan Eriksson"
+    #     summary: "Interested in cabin renovation, source: cabin fair"
+    # If no existing entities, this section reads: "(none)"
 
-    TASK:
-    Given the free-text input below, extract:
-    1. PRIMARY ENTITY: The main thing being described. Classify its type from the available types above.
-    2. STRUCTURED FIELDS: Map free-text attributes to the type's label_schema fields.
-    3. MENTIONED ENTITIES: Other entities referenced in the text. For each:
-       - Check if it matches an existing entity (provide match_id and confidence 0-1)
-       - If no match, provide enough data to create a new entity
-    4. RELATIONSHIPS: Edges between the primary entity and mentioned entities (with edge type from available types).
-    5. ACTION ITEMS: Any implied next steps or tasks.
+    # ── USER MESSAGE ────────────────────────────────────────────
+    # Sent as the user message.
 
-    OUTPUT FORMAT (strict JSON, no markdown):
-    {
-      "primary_entity": { "type": "...", "data": { ... } },
-      "mentioned_entities": [
-        { "type": "...", "data": { ... }, "existing_match_id": "..." | null, "match_confidence": 0.0-1.0 }
-      ],
-      "relationships": [
-        { "edge_type": "...", "source": "primary" | index, "target": "primary" | index | "existing:ID", "data": { ... } }
-      ],
-      "action_items": ["..."]
-    }
+    Extract structured data from the following text:
 
-    FREE-TEXT INPUT:
+    ---
     {content}
     ---
+
+    Source: {source}
+
+    # ── EXPECTED OUTPUT SCHEMA ──────────────────────────────────
+    # This block is appended to the system message as a reference.
+
+    OUTPUT JSON SCHEMA:
+    ```json
+    {
+      "primary_entity": {
+        "type": "string — entity type name from AVAILABLE ENTITY TYPES",
+        "data": {
+          "...schema fields mapped from text..."
+        }
+      },
+      "mentioned_entities": [
+        {
+          "type": "string — entity type name",
+          "data": { "...fields..." },
+          "existing_match_id": "string (UUID) | null",
+          "match_confidence": "number 0.0-1.0 (required if existing_match_id is set)"
+        }
+      ],
+      "relationships": [
+        {
+          "edge_type": "string — edge type name from AVAILABLE EDGE TYPES",
+          "source": "\"primary\" | integer (index into mentioned_entities, 0-based)",
+          "target": "\"primary\" | integer | \"existing:<UUID>\"",
+          "data": {}
+        }
+      ],
+      "action_items": ["string — actionable next step implied by text"]
+    }
+    ```
+
+    FALLBACK (when input is too vague to classify):
+    ```json
+    {
+      "primary_entity": { "type": "note", "data": { "content": "<original text>" } },
+      "mentioned_entities": [],
+      "relationships": [],
+      "action_items": []
+    }
+    ```
+
+    # ── FEW-SHOT EXAMPLES (Pettson domain) ──────────────────────
+
+    EXAMPLE 1 — Lead capture from a fair:
+    Input: "Met Johan Eriksson at the cabin fair. He's interested in renovating his cabin near Åre. Wants a quote for new roof + insulation. Phone: 070-123-4567."
+    Output:
+    ```json
+    {
+      "primary_entity": {
+        "type": "lead",
+        "data": {
+          "name": "Johan Eriksson",
+          "phone": "070-123-4567",
+          "interest": "cabin renovation (roof + insulation)",
+          "source": "cabin fair"
+        }
+      },
+      "mentioned_entities": [
+        {
+          "type": "property",
+          "data": { "name": "Johan's cabin", "location": "near Åre", "property_type": "cabin" },
+          "existing_match_id": null,
+          "match_confidence": 0.0
+        }
+      ],
+      "relationships": [
+        { "edge_type": "owns", "source": "primary", "target": 0, "data": {} },
+        { "edge_type": "project_for", "source": "primary", "target": 0, "data": { "scope": "roof + insulation" } }
+      ],
+      "action_items": ["Send quote for roof + insulation to Johan Eriksson"]
+    }
+    ```
+
+    EXAMPLE 2 — Matching existing entity:
+    Input: "Johan Eriksson called back. He accepted the quote for the Åre cabin. Start date: March 15. He'll pay 50% upfront."
+    (Assuming existing entity: { id: "abc-123", type: "lead", name: "Johan Eriksson" })
+    Output:
+    ```json
+    {
+      "primary_entity": {
+        "type": "booking",
+        "data": {
+          "description": "Åre cabin renovation",
+          "start_date": "2026-03-15",
+          "payment_terms": "50% upfront",
+          "status": "confirmed"
+        }
+      },
+      "mentioned_entities": [
+        {
+          "type": "lead",
+          "data": { "name": "Johan Eriksson" },
+          "existing_match_id": "abc-123",
+          "match_confidence": 0.95
+        }
+      ],
+      "relationships": [
+        { "edge_type": "booked_by", "source": "primary", "target": "existing:abc-123", "data": {} }
+      ],
+      "action_items": ["Schedule start date March 15", "Send invoice for 50% upfront payment"]
+    }
+    ```
+
+    EXAMPLE 3 — Vague input (fallback):
+    Input: "Remember to check the thing about the permit."
+    Output:
+    ```json
+    {
+      "primary_entity": { "type": "note", "data": { "content": "Remember to check the thing about the permit." } },
+      "mentioned_entities": [],
+      "relationships": [],
+      "action_items": ["Check permit status"]
+    }
+    ```
+
+    # ── LLM CALL PARAMETERS ─────────────────────────────────────
+    model: "gpt-4o-mini"           # via OpenAI or OpenRouter
+    max_tokens: 2000               # output budget — sufficient for ~10 entities
+    temperature: 0.1               # low for deterministic extraction
+    response_format: { type: "json_object" }  # enforce JSON output (OpenAI feature)
+    timeout: 30_000                # 30s — fail fast, fits within Supabase 150s wall-clock
+
+    # Input token budget: system message + examples ≈ 1500 tokens.
+    # User content: up to 10,000 chars ≈ 2500 tokens.
+    # Existing entities context: up to 20 entities ≈ 500 tokens.
+    # Total input: ≈ 4500 tokens. Well within gpt-4o-mini 128K context.
+
+    # ── POST-PROCESSING ─────────────────────────────────────────
+    # After LLM returns JSON:
+    # 1. Parse JSON. If invalid → retry once with "Your output was not valid JSON. Try again."
+    #    If still invalid → E007 EXTRACTION_FAILED("LLM returned invalid JSON")
+    # 2. Validate primary_entity.type against tenant's type nodes. If unknown → fall back to "note".
+    # 3. For each mentioned_entity:
+    #    a. If existing_match_id is set → verify it exists in tenant. If not → treat as new entity.
+    #    b. Run 3-tier deduplication (§3.2 deduplication_strategy) regardless of LLM's match.
+    #       LLM's existing_match_id is a HINT, not authoritative. Dedup algorithm has final say.
+    # 4. Validate all edge_types against tenant's edge type nodes. Drop edges with unknown types.
+    # 5. Build execution plan → pass to thought_captured projection (§3.4).
   deduplication_strategy: |
     [RESOLVED:gen1 D-009] Entity deduplication: Hybrid embedding + LLM disambiguation.
     Inspired by Graphiti's three-tier approach but simplified for gen1 scale (<10K entities/tenant).
@@ -725,82 +893,606 @@ const GetBlobResult = z.object({
 
 This matrix defines how each event `intent_type` maps to mutations on fact tables. It is the skeleton of the event-sourcing engine. Gen1-spec MUST expand each row into full pseudocode; gen1-impl translates pseudocode to executable code.
 
-```yaml
-# ── PROJECTION MATRIX ──
-# Format: intent_type → [fact table mutation(s)]
-# All mutations happen within a single database transaction (see INV-ATOMIC, section 3.5).
+```
+# ══════════════════════════════════════════════════════════════
+# PROJECTION MATRIX — gen1.1 expanded pseudocode
+# ══════════════════════════════════════════════════════════════
+#
+# Format: intent_type → full pseudocode for event + fact table mutations.
+# All mutations happen within a single database transaction (INV-ATOMIC, §3.5).
+# Variables prefixed with $ are runtime values. $now = clock_timestamp().
+# $actor = resolved actor node_id (§4.6). $tenant = resolved tenant_id.
+#
+# CONVENTION: every projection function returns the created/modified rows
+# so the tool handler can build the response without a follow-up query.
+# ──────────────────────────────────────────────────────────────
+
+# ─── entity_created ───────────────────────────────────────────
 
 entity_created:
-  trigger: store_entity (new entity, no entity_id provided)
-  mutations:
-    - INSERT events (intent_type="entity_created", payload={type, data, epistemic})
-    - INSERT nodes (node_id=event.stream_id, type_node_id=resolved, data=payload.data, epistemic=payload.epistemic, valid_from=now, valid_to=infinity, created_by_event=event.event_id)
+  trigger: store_entity (new entity — entity_id NOT provided)
+  pre_validate:
+    - Resolve type_node_id:
+        SELECT node_id, data->'label_schema' AS schema
+        FROM nodes
+        WHERE (tenant_id = $tenant OR tenant_id = '00000000-0000-7000-0000-000000000000')
+          AND type_node_id = '00000000-0000-7000-0000-000000000001'  -- metatype
+          AND data->>'name' = $entity_type
+          AND is_deleted = false AND valid_to = 'infinity'
+        LIMIT 1;
+      If not found → E001 VALIDATION_ERROR("Invalid entity_type: '$entity_type'")
+    - If type_node has label_schema → validate $data against it (JSON Schema).
+      If invalid → E006 SCHEMA_VIOLATION
+    - Check scope: has_scope(token, "tenant:$tenant:write") OR
+      has_scope(token, "tenant:$tenant:nodes:$entity_type:write")
+      If denied → E003 AUTH_DENIED
+  pseudocode: |
+    $node_id   = uuid_generate_v7()      -- new stable identity
+    $event_id  = uuid_generate_v7()
+    $valid_from = $params.valid_from ?? $now
+    $epistemic  = $params.epistemic  ?? 'asserted'
+
+    BEGIN;
+
+    INSERT INTO events (event_id, tenant_id, intent_type, payload, stream_id,
+                        node_ids, occurred_at, recorded_at, created_by)
+    VALUES ($event_id, $tenant, 'entity_created',
+            jsonb_build_object(
+              'entity_type', $entity_type,
+              'type_node_id', $type_node_id::text,
+              'data', $data,
+              'epistemic', $epistemic
+            ),
+            $node_id,          -- stream_id = node_id (first event in stream)
+            ARRAY[$node_id],
+            $valid_from, $now, $actor);
+
+    INSERT INTO nodes (node_id, tenant_id, type_node_id, data, embedding,
+                       epistemic, valid_from, valid_to,
+                       recorded_at, created_by, created_by_event, is_deleted)
+    VALUES ($node_id, $tenant, $type_node_id, $data, NULL,
+            $epistemic, $valid_from, 'infinity',
+            $now, $actor, $event_id, false);
+
+    COMMIT;
   post_tx:
-    - queue async embedding for new node
+    - Queue async embedding: { node_id: $node_id, text: "$entity_type: " + JSON.stringify($data) }
+  edge_cases:
+    - valid_from in the past: allowed (backdating). EXCLUDE constraint prevents overlap
+      with any existing version of the same node_id (impossible for new entity, but
+      defensive against UUID collision — astronomically unlikely with UUIDv7).
+  errors:
+    - E001 if entity_type not found
+    - E006 if data fails schema validation
+    - E003 if scope check fails
+
+# ─── entity_updated ───────────────────────────────────────────
 
 entity_updated:
-  trigger: store_entity (existing entity, entity_id provided)
-  mutations:
-    - INSERT events (intent_type="entity_updated", payload={entity_id, old_data_summary, new_data, epistemic})
-    - UPDATE nodes SET valid_to=now() WHERE node_id=entity_id AND valid_to='infinity'   # close current version
-    - INSERT nodes (node_id=entity_id, data=new_data, epistemic=new_or_same, valid_from=now, valid_to=infinity, created_by_event=event.event_id)   # open new version
+  trigger: store_entity (existing entity — entity_id IS provided, epistemic unchanged or not provided)
+  pre_validate:
+    - Fetch current version:
+        SELECT node_id, tenant_id, type_node_id, data, epistemic, valid_from
+        FROM nodes
+        WHERE node_id = $entity_id AND is_deleted = false AND valid_to = 'infinity'
+        LIMIT 1;
+      If not found → E002 NOT_FOUND
+    - If expected_version provided:
+        If current.valid_from != $expected_version → E004 CONFLICT(expected=$expected_version, actual=current.valid_from)
+    - If current.valid_to != 'infinity':
+        The entity already has a closed version with no open successor.
+        This means a concurrent update closed it. → E004 CONFLICT
+    - Resolve type_node_id (may change if entity_type param differs from current type):
+        If $entity_type provided and != current type name → re-resolve type_node_id.
+        If not provided → retain current type_node_id.
+    - If type_node has label_schema → validate $data against it → E006 on failure
+    - Check scope: write on $tenant
+  pseudocode: |
+    $event_id   = uuid_generate_v7()
+    $valid_from = $now                    -- new version starts now
+    $epistemic  = $params.epistemic ?? $current.epistemic  -- preserve if not changed
+    $type_node_id = $resolved_type_node_id ?? $current.type_node_id
+
+    -- Detect epistemic change: if $epistemic != $current.epistemic, emit
+    -- epistemic_change instead (see below). This check happens BEFORE BEGIN.
+    IF $epistemic != $current.epistemic:
+      → delegate to epistemic_change projection (below)
+
+    BEGIN;
+
+    INSERT INTO events (event_id, tenant_id, intent_type, payload, stream_id,
+                        node_ids, occurred_at, recorded_at, created_by)
+    VALUES ($event_id, $tenant, 'entity_updated',
+            jsonb_build_object(
+              'entity_id', $entity_id::text,
+              'old_data', $current.data,       -- full snapshot for audit
+              'new_data', $data,
+              'old_epistemic', $current.epistemic,
+              'new_epistemic', $epistemic,
+              'expected_version', $params.expected_version
+            ),
+            $entity_id,        -- stream_id = node_id
+            ARRAY[$entity_id],
+            $valid_from, $now, $actor);
+
+    -- Close current version
+    UPDATE nodes
+    SET    valid_to = $valid_from          -- close at exact moment new version opens
+    WHERE  node_id = $entity_id
+      AND  valid_to = 'infinity'
+      AND  is_deleted = false;
+    -- If UPDATE affected 0 rows → concurrent modification. ROLLBACK. Return E004.
+
+    -- Open new version
+    INSERT INTO nodes (node_id, tenant_id, type_node_id, data, embedding,
+                       epistemic, valid_from, valid_to,
+                       recorded_at, created_by, created_by_event, is_deleted)
+    VALUES ($entity_id, $tenant, $type_node_id, $data, NULL,
+            $epistemic, $valid_from, 'infinity',
+            $now, $actor, $event_id, false);
+
+    COMMIT;
   post_tx:
-    - queue async embedding for new version
+    - Queue async embedding for new version
+  edge_cases:
+    - expected_version omitted: last-write-wins (D-004). No conflict check.
+    - Entity was soft-deleted (is_deleted=true): returns E002 NOT_FOUND.
+      To "un-delete" → create a new entity with same type (gets a new node_id).
+    - Data is identical to current: still creates new version (for audit trail).
+      Optimization: gen1-impl MAY skip if data + epistemic are identical, but
+      this is an implementation choice, not a spec requirement.
+  errors:
+    - E002 if entity not found or already deleted
+    - E004 if expected_version mismatch or concurrent close
+    - E006 if data fails schema validation
+
+# ─── entity_removed ───────────────────────────────────────────
 
 entity_removed:
   trigger: remove_entity
-  mutations:
-    - INSERT events (intent_type="entity_removed", payload={entity_id})
-    - UPDATE nodes SET is_deleted=true, valid_to=now() WHERE node_id=entity_id AND valid_to='infinity'
+  pre_validate:
+    - Fetch current version:
+        SELECT node_id, tenant_id, type_node_id, data, epistemic
+        FROM nodes
+        WHERE node_id = $entity_id AND is_deleted = false AND valid_to = 'infinity'
+        LIMIT 1;
+      If not found → E002 NOT_FOUND
+    - Check scope: write on $tenant
+  pseudocode: |
+    $event_id = uuid_generate_v7()
+
+    BEGIN;
+
+    INSERT INTO events (event_id, tenant_id, intent_type, payload, stream_id,
+                        node_ids, occurred_at, recorded_at, created_by)
+    VALUES ($event_id, $tenant, 'entity_removed',
+            jsonb_build_object(
+              'entity_id', $entity_id::text,
+              'entity_type', $current.type_name,
+              'final_data', $current.data        -- snapshot for audit
+            ),
+            $entity_id,
+            ARRAY[$entity_id],
+            $now, $now, $actor);
+
+    UPDATE nodes
+    SET    is_deleted = true, valid_to = $now
+    WHERE  node_id = $entity_id
+      AND  valid_to = 'infinity'
+      AND  is_deleted = false;
+
+    COMMIT;
+  edge_cases:
+    - Already deleted: E002 NOT_FOUND (WHERE clause filters is_deleted=false).
+    - Connected edges: NOT automatically removed. They become dangling. explore_graph
+      skips edges where either endpoint is_deleted=true. get_timeline still shows them.
+    - Entity is a type_node: allowed (orphans entities of that type, but does not
+      cascade-delete them — they retain their type_node_id FK for historical accuracy).
+  errors:
+    - E002 if not found or already deleted
+    - E003 if scope denied
+
+# ─── edge_created ─────────────────────────────────────────────
 
 edge_created:
   trigger: connect_entities
-  mutations:
-    - INSERT events (intent_type="edge_created", payload={edge_type, source_id, target_id, data})
-    - INSERT edges (edge_id=gen_uuid, source_id, target_id, type_node_id=resolved, data, valid_from=now, valid_to=infinity, created_by_event=event.event_id)
+  pre_validate:
+    - Resolve source node:
+        SELECT node_id, tenant_id, type_node_id FROM nodes
+        WHERE node_id = $source_id AND is_deleted = false AND valid_to = 'infinity';
+      If not found → E002 NOT_FOUND("source entity '$source_id'")
+    - Resolve target node: same query for $target_id.
+    - Resolve edge type_node_id:
+        Same type resolution as entity_created, but kind='edge_type'.
+        Search system tenant + caller tenant.
+      If not found → E001 VALIDATION_ERROR("Invalid edge_type: '$edge_type'")
+    - Cross-tenant check:
+        $is_cross_tenant = (source.tenant_id != target.tenant_id)
+        If $is_cross_tenant:
+          - Check scope: read on target.tenant_id
+          - Check grants table:
+              SELECT 1 FROM grants
+              WHERE subject_tenant_id = $tenant
+                AND object_node_id = $target_id
+                AND capability IN ('TRAVERSE', 'WRITE')
+                AND is_deleted = false AND valid_to > $now
+              LIMIT 1;
+            If not found → E005 CROSS_TENANT_DENIED
+    - Check scope: write on source.tenant_id
+  pseudocode: |
+    $edge_id  = uuid_generate_v7()
+    $event_id = uuid_generate_v7()
+    $edge_tenant = $source.tenant_id     -- edge owned by source tenant
+
+    BEGIN;
+
+    INSERT INTO events (event_id, tenant_id, intent_type, payload, stream_id,
+                        node_ids, edge_ids, occurred_at, recorded_at, created_by)
+    VALUES ($event_id, $edge_tenant, 'edge_created',
+            jsonb_build_object(
+              'edge_type', $edge_type,
+              'edge_type_node_id', $edge_type_node_id::text,
+              'source_id', $source_id::text,
+              'target_id', $target_id::text,
+              'source_tenant_id', $source.tenant_id::text,
+              'target_tenant_id', $target.tenant_id::text,
+              'data', COALESCE($data, '{}'::jsonb),
+              'is_cross_tenant', $is_cross_tenant
+            ),
+            $source_id,            -- stream_id = source entity
+            ARRAY[$source_id, $target_id],
+            ARRAY[$edge_id],
+            $now, $now, $actor);
+
+    INSERT INTO edges (edge_id, tenant_id, type_node_id, source_id, target_id,
+                       data, valid_from, valid_to, recorded_at,
+                       created_by, created_by_event, is_deleted)
+    VALUES ($edge_id, $edge_tenant, $edge_type_node_id,
+            $source_id, $target_id,
+            COALESCE($data, '{}'::jsonb),
+            $now, 'infinity', $now,
+            $actor, $event_id, false);
+
+    COMMIT;
+  edge_cases:
+    - Duplicate edge (same source, target, type): allowed. Multiple edges of the same
+      type between the same pair is valid (e.g., multiple "contacted_via" with different
+      data like different phone numbers). Deduplication is the caller's responsibility.
+    - Self-edges (source_id = target_id): allowed. Example: "entity references itself."
+  errors:
+    - E002 if source or target not found
+    - E001 if edge_type not found
+    - E005 if cross-tenant grant missing
+    - E003 if scope denied
+
+# ─── edge_removed ─────────────────────────────────────────────
 
 edge_removed:
-  trigger: (future tool or side effect of remove_entity on dangling edges)
-  mutations:
-    - INSERT events (intent_type="edge_removed", payload={edge_id})
-    - UPDATE edges SET is_deleted=true, valid_to=now() WHERE edge_id=X AND valid_to='infinity'
+  trigger: (future tool or side effect)
+  note: |
+    Gen1 has no dedicated remove_edge tool. Edge removal happens via propose_event
+    or future tool. This projection is defined for completeness and for propose_event
+    to use when intent_type="edge_removed" is submitted.
+  pre_validate:
+    - Fetch edge:
+        SELECT edge_id, tenant_id, source_id, target_id FROM edges
+        WHERE edge_id = $edge_id AND is_deleted = false AND valid_to = 'infinity';
+      If not found → E002 NOT_FOUND
+    - Check scope: write on edge.tenant_id
+  pseudocode: |
+    $event_id = uuid_generate_v7()
+
+    BEGIN;
+
+    INSERT INTO events (event_id, tenant_id, intent_type, payload, stream_id,
+                        edge_ids, occurred_at, recorded_at, created_by)
+    VALUES ($event_id, $edge.tenant_id, 'edge_removed',
+            jsonb_build_object(
+              'edge_id', $edge_id::text,
+              'source_id', $edge.source_id::text,
+              'target_id', $edge.target_id::text
+            ),
+            $edge.source_id,       -- stream_id = source entity
+            ARRAY[$edge_id],
+            $now, $now, $actor);
+
+    UPDATE edges
+    SET    is_deleted = true, valid_to = $now
+    WHERE  edge_id = $edge_id
+      AND  is_deleted = false
+      AND  valid_to = 'infinity';
+
+    COMMIT;
+
+# ─── epistemic_change ─────────────────────────────────────────
 
 epistemic_change:
   trigger: store_entity with changed epistemic status on existing entity
-  mutations:
-    - (same as entity_updated, but intent_type="epistemic_change" for audit clarity)
-    - INSERT events (intent_type="epistemic_change", payload={entity_id, old_epistemic, new_epistemic})
-    - UPDATE nodes SET valid_to=now() WHERE node_id=entity_id AND valid_to='infinity'
-    - INSERT nodes (node_id=entity_id, data=current_data, epistemic=new_epistemic, valid_from=now, valid_to=infinity, created_by_event=event.event_id)
+  note: |
+    Emitted INSTEAD OF entity_updated when epistemic status changes.
+    If BOTH data and epistemic change in the same call, this intent_type is used
+    (epistemic change is the more significant event for audit).
+  pre_validate:
+    - Same as entity_updated (fetch current, check scope, check expected_version)
+    - Additionally validate epistemic transition:
+        Valid transitions: hypothesis→asserted, hypothesis→confirmed, asserted→confirmed.
+        Invalid: confirmed→anything, asserted→hypothesis, any→hypothesis (except capture_thought).
+      If invalid → E001 VALIDATION_ERROR("Invalid epistemic transition: '$old' → '$new'")
+  pseudocode: |
+    $event_id   = uuid_generate_v7()
+    $valid_from = $now
+
+    BEGIN;
+
+    INSERT INTO events (event_id, tenant_id, intent_type, payload, stream_id,
+                        node_ids, occurred_at, recorded_at, created_by)
+    VALUES ($event_id, $tenant, 'epistemic_change',
+            jsonb_build_object(
+              'entity_id', $entity_id::text,
+              'old_epistemic', $current.epistemic,
+              'new_epistemic', $params.epistemic,
+              'old_data', $current.data,
+              'new_data', $data                -- may be same as old_data if only epistemic changed
+            ),
+            $entity_id,
+            ARRAY[$entity_id],
+            $valid_from, $now, $actor);
+
+    -- Close current version
+    UPDATE nodes
+    SET    valid_to = $valid_from
+    WHERE  node_id = $entity_id AND valid_to = 'infinity' AND is_deleted = false;
+
+    -- Open new version with new epistemic status
+    INSERT INTO nodes (node_id, tenant_id, type_node_id, data, embedding,
+                       epistemic, valid_from, valid_to,
+                       recorded_at, created_by, created_by_event, is_deleted)
+    VALUES ($entity_id, $tenant, $current.type_node_id,
+            $data,              -- may include data changes too
+            NULL,               -- embedding regenerated async
+            $params.epistemic,  -- the new status
+            $valid_from, 'infinity',
+            $now, $actor, $event_id, false);
+
+    COMMIT;
+  post_tx:
+    - Queue async embedding (data may have changed)
+
+# ─── thought_captured ─────────────────────────────────────────
 
 thought_captured:
   trigger: capture_thought
-  mutations:
-    - INSERT events (intent_type="thought_captured", payload={content, source, extraction_result})
-    - For primary entity: INSERT nodes (epistemic='hypothesis', created_by_event=event.event_id)
-    - For each new mentioned entity: INSERT nodes (epistemic='hypothesis', created_by_event=event.event_id)
-    - For each relationship: INSERT edges (created_by_event=event.event_id)
-    - For existing entity matches: INSERT edges only (no new nodes)
-  pre_tx:
-    - LLM extraction call happens BEFORE the transaction (external side effect)
-    - Entity deduplication search happens BEFORE the transaction
+  pre_tx: |
+    These steps happen BEFORE the database transaction:
+
+    1. Fetch tenant type nodes (for LLM prompt context):
+        SELECT node_id, data FROM nodes
+        WHERE tenant_id = $tenant
+          AND type_node_id = '00000000-0000-7000-0000-000000000001'
+          AND is_deleted = false AND valid_to = 'infinity';
+
+    2. Call LLM with complete prompt (§3.2 prompt template):
+        $extraction = await call_extraction_llm($content, $type_nodes)
+        If LLM fails or returns invalid JSON → E007 EXTRACTION_FAILED
+
+    3. For each entity in $extraction.mentioned_entities, run deduplication:
+        $dedup_result = await deduplicate(entity, $tenant)
+        -- See §3.2 deduplication_strategy for the 3-tier algorithm.
+        -- Result: { match: node | null, confidence: number, method: string }
+
+    4. Build execution plan:
+        $plan = {
+          primary: { type_node_id, data, is_new: true },
+          mentioned: [
+            { type_node_id, data, is_new: !dedup.match, existing_id: dedup.match?.node_id }
+          ],
+          edges: [ { type_node_id, source_idx, target_idx_or_id } ]
+        }
+
+  pseudocode: |
+    $event_id  = uuid_generate_v7()
+    $primary_id = uuid_generate_v7()
+    $new_node_ids = [$primary_id]
+    $all_edge_ids = []
+
+    BEGIN;
+
+    -- 1. Create the thought_captured event
+    INSERT INTO events (event_id, tenant_id, intent_type, payload, stream_id,
+                        node_ids, occurred_at, recorded_at, created_by)
+    VALUES ($event_id, $tenant, 'thought_captured',
+            jsonb_build_object(
+              'content', $content,
+              'source', $source,
+              'extraction_result', $extraction,    -- full LLM output for audit
+              'dedup_results', $dedup_results       -- dedup decisions for audit
+            ),
+            $primary_id,        -- stream_id = primary entity
+            $all_node_ids,      -- populated after inserts (set via UPDATE at end)
+            $now, $now, $actor);
+
+    -- 2. Create primary entity node
+    INSERT INTO nodes (node_id, tenant_id, type_node_id, data, embedding,
+                       epistemic, valid_from, valid_to,
+                       recorded_at, created_by, created_by_event, is_deleted)
+    VALUES ($primary_id, $tenant, $primary.type_node_id,
+            $extraction.primary_entity.data,
+            NULL,
+            'hypothesis',       -- always hypothesis for capture_thought
+            $now, 'infinity', $now, $actor, $event_id, false);
+
+    -- 3. For each mentioned entity:
+    FOR $mentioned IN $plan.mentioned:
+      IF $mentioned.is_new:
+        $mentioned_id = uuid_generate_v7()
+        INSERT INTO nodes (node_id, tenant_id, type_node_id, data, embedding,
+                           epistemic, valid_from, valid_to,
+                           recorded_at, created_by, created_by_event, is_deleted)
+        VALUES ($mentioned_id, $tenant, $mentioned.type_node_id,
+                $mentioned.data, NULL,
+                'hypothesis', $now, 'infinity', $now, $actor, $event_id, false);
+        $new_node_ids.push($mentioned_id)
+      ELSE:
+        $mentioned_id = $mentioned.existing_id   -- link to existing entity
+
+    -- 4. Create edges between entities
+    FOR $rel IN $plan.edges:
+      $edge_id = uuid_generate_v7()
+      $source = resolve_idx($rel.source)   -- "primary" → $primary_id, index → $mentioned_ids[i]
+      $target = resolve_idx($rel.target)   -- same, or "existing:UUID" → UUID
+      INSERT INTO edges (edge_id, tenant_id, type_node_id, source_id, target_id,
+                         data, valid_from, valid_to, recorded_at,
+                         created_by, created_by_event, is_deleted)
+      VALUES ($edge_id, $tenant, $rel.type_node_id,
+              $source, $target,
+              COALESCE($rel.data, '{}'::jsonb),
+              $now, 'infinity', $now, $actor, $event_id, false);
+      $all_edge_ids.push($edge_id)
+
+    -- 5. Update event with final node_ids and edge_ids
+    UPDATE events
+    SET    node_ids = $new_node_ids, edge_ids = $all_edge_ids
+    WHERE  event_id = $event_id;
+
+    COMMIT;
   post_tx:
-    - queue async embeddings for all new nodes
+    - Queue async embeddings for all $new_node_ids
+  edge_cases:
+    - LLM returns zero entities: E007 EXTRACTION_FAILED("No entity type classified")
+    - LLM returns entity type not in tenant's type_nodes: create as generic "note" type
+      (must exist as a fallback type_node; seed data includes it).
+    - Deduplication finds multiple strong matches (>0.95): use the highest similarity.
+    - All mentioned entities are existing (no new nodes): still create primary + edges.
+  errors:
+    - E007 if LLM call fails or returns unparseable output
+    - E003 if scope denied
+    - Any INSERT failure → full ROLLBACK (INV-ATOMIC)
+
+# ─── grant_created ────────────────────────────────────────────
 
 grant_created:
-  trigger: (admin action, future tool)
-  mutations:
-    - INSERT events (intent_type="grant_created", payload={subject_tenant, object_node, capability})
-    - INSERT grants (created_by_event=event.event_id)
+  trigger: admin action (no dedicated MCP tool in gen1; use propose_event or direct API)
+  pre_validate:
+    - Verify caller has admin scope for issuing tenant.
+    - Verify object_node_id exists and belongs to issuing tenant.
+    - Verify subject_tenant_id exists.
+  pseudocode: |
+    $grant_id = uuid_generate_v7()
+    $event_id = uuid_generate_v7()
+
+    BEGIN;
+
+    INSERT INTO events (event_id, tenant_id, intent_type, payload, stream_id,
+                        node_ids, occurred_at, recorded_at, created_by)
+    VALUES ($event_id, $tenant, 'grant_created',
+            jsonb_build_object(
+              'grant_id', $grant_id::text,
+              'subject_tenant_id', $subject_tenant_id::text,
+              'object_node_id', $object_node_id::text,
+              'capability', $capability,
+              'valid_from', $valid_from::text,
+              'valid_to', COALESCE($valid_to, 'infinity')::text
+            ),
+            $object_node_id,    -- stream_id = the granted node
+            ARRAY[$object_node_id],
+            $now, $now, $actor);
+
+    INSERT INTO grants (grant_id, tenant_id, subject_tenant_id, object_node_id,
+                        capability, valid_from, valid_to, is_deleted,
+                        created_by, created_by_event)
+    VALUES ($grant_id, $tenant, $subject_tenant_id, $object_node_id,
+            $capability,
+            COALESCE($valid_from, $now), COALESCE($valid_to, 'infinity'),
+            false, $actor, $event_id);
+
+    COMMIT;
+
+# ─── grant_revoked ────────────────────────────────────────────
 
 grant_revoked:
-  trigger: (admin action, future tool)
-  mutations:
-    - INSERT events (intent_type="grant_revoked", payload={grant_id})
-    - UPDATE grants SET is_deleted=true, valid_to=now() WHERE grant_id=X
+  trigger: admin action (no dedicated MCP tool in gen1; use propose_event or direct API)
+  pre_validate:
+    - Fetch grant:
+        SELECT * FROM grants
+        WHERE grant_id = $grant_id AND is_deleted = false AND valid_to > $now;
+      If not found → E002 NOT_FOUND
+    - Verify caller has admin scope for grant.tenant_id
+  pseudocode: |
+    $event_id = uuid_generate_v7()
+
+    BEGIN;
+
+    INSERT INTO events (event_id, tenant_id, intent_type, payload, stream_id,
+                        node_ids, occurred_at, recorded_at, created_by)
+    VALUES ($event_id, $grant.tenant_id, 'grant_revoked',
+            jsonb_build_object(
+              'grant_id', $grant_id::text,
+              'subject_tenant_id', $grant.subject_tenant_id::text,
+              'object_node_id', $grant.object_node_id::text,
+              'capability', $grant.capability,
+              'reason', COALESCE($reason, 'admin_revocation')
+            ),
+            $grant.object_node_id,
+            ARRAY[$grant.object_node_id],
+            $now, $now, $actor);
+
+    UPDATE grants
+    SET    is_deleted = true, valid_to = $now
+    WHERE  grant_id = $grant_id
+      AND  is_deleted = false;
+
+    COMMIT;
+
+# ─── blob_stored ──────────────────────────────────────────────
+
+blob_stored:
+  trigger: store_blob
+  pre_validate:
+    - Decode $data_base64, compute $size_bytes.
+    - If $related_entity_id provided:
+        Verify entity exists and caller has write scope on its tenant.
+    - Upload binary to object storage → receive $storage_ref.
+      If upload fails → E009 INTERNAL_ERROR
+    - Check scope: write on $tenant
+  pseudocode: |
+    $blob_id  = uuid_generate_v7()
+    $event_id = uuid_generate_v7()
+
+    BEGIN;
+
+    INSERT INTO events (event_id, tenant_id, intent_type, payload, stream_id,
+                        node_ids, occurred_at, recorded_at, created_by)
+    VALUES ($event_id, $tenant, 'blob_stored',
+            jsonb_build_object(
+              'blob_id', $blob_id::text,
+              'content_type', $content_type,
+              'size_bytes', $size_bytes,
+              'storage_ref', $storage_ref,
+              'related_entity_id', $related_entity_id::text  -- nullable
+            ),
+            $related_entity_id,       -- stream_id = related entity (or NULL)
+            CASE WHEN $related_entity_id IS NOT NULL
+                 THEN ARRAY[$related_entity_id] ELSE '{}'::uuid[] END,
+            $now, $now, $actor);
+
+    INSERT INTO blobs (blob_id, tenant_id, content_type, storage_ref,
+                       size_bytes, node_id, created_at, created_by)
+    VALUES ($blob_id, $tenant, $content_type, $storage_ref,
+            $size_bytes, $related_entity_id, $now, $actor);
+
+    COMMIT;
+  edge_cases:
+    - Object storage upload succeeds but DB transaction fails: orphaned blob in storage.
+      Mitigation: gen1-impl SHOULD implement a cleanup job or accept the orphan (storage
+      is cheap). The upload happens pre-tx because it's an external side effect.
+    - No related_entity_id: blob is standalone (e.g., a template document).
+  errors:
+    - E002 if related_entity_id provided but not found
+    - E003 if scope denied
+    - E009 if object storage upload fails
 ```
 
-**Gen1-spec precision requirement:** Each row above must be expanded to include exact column values, exact SQL statements or pseudocode, and exact error conditions. The matrix must be complete — every possible `intent_type` must be listed.
+**Completeness check:** Every `intent_type` in the events table CHECK constraint (§2.1) has a matching projection entry above: `entity_created`, `entity_updated`, `entity_removed`, `edge_created`, `edge_removed`, `epistemic_change`, `thought_captured`, `grant_created`, `grant_revoked`, `blob_stored`. [gen1.1: completeness verified]
 
 ### 3.5 Transaction boundaries and error model
 
